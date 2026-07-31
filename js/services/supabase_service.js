@@ -258,4 +258,7 @@ window.DnDNexus = window.DnDNexus || {};
     window.DnDNexus.Services.register('supabase', instance);
   }
   window.DnDNexus.SupabaseService = instance;
+  window.DnDNexus.openSupabaseConfig = function() {
+    instance.openConfigModal();
+  };
 })();

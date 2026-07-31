@@ -14,12 +14,7 @@ window.DnDNexus = window.DnDNexus || {};
     init() {
       this.loadProfile();
       this.bindUI();
-
-      if (!this.user) {
-        setTimeout(() => this.openLoginModal(), 400);
-      } else {
-        this.updateHeaderBadge();
-      }
+      this.updateHeaderBadge();
     }
 
     // SHA-256 Cryptographic Password Hashing (Web Crypto API)
