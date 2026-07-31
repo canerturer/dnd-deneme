@@ -136,19 +136,37 @@ ALTER TABLE public.characters ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.roll_events ENABLE ROW LEVEL SECURITY;
 
 -- Allow Public Anonymous Read & Write Access for D&D 5e Nexus Client App
+DROP POLICY IF EXISTS "Public Read Profiles" ON public.profiles;
 CREATE POLICY "Public Read Profiles" ON public.profiles FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Insert Profiles" ON public.profiles;
 CREATE POLICY "Public Insert Profiles" ON public.profiles FOR INSERT WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public Update Profiles" ON public.profiles;
 CREATE POLICY "Public Update Profiles" ON public.profiles FOR UPDATE USING (true);
 
+DROP POLICY IF EXISTS "Public Read Campaigns" ON public.campaigns;
 CREATE POLICY "Public Read Campaigns" ON public.campaigns FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Insert Campaigns" ON public.campaigns;
 CREATE POLICY "Public Insert Campaigns" ON public.campaigns FOR INSERT WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public Update Campaigns" ON public.campaigns;
 CREATE POLICY "Public Update Campaigns" ON public.campaigns FOR UPDATE USING (true);
 
+DROP POLICY IF EXISTS "Public Read Characters" ON public.characters;
 CREATE POLICY "Public Read Characters" ON public.characters FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Insert Characters" ON public.characters;
 CREATE POLICY "Public Insert Characters" ON public.characters FOR INSERT WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public Update Characters" ON public.characters;
 CREATE POLICY "Public Update Characters" ON public.characters FOR UPDATE USING (true);
 
+DROP POLICY IF EXISTS "Public Read Roll Events" ON public.roll_events;
 CREATE POLICY "Public Read Roll Events" ON public.roll_events FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Insert Roll Events" ON public.roll_events;
 CREATE POLICY "Public Insert Roll Events" ON public.roll_events FOR INSERT WITH CHECK (true);
 
 -- ==============================================================================

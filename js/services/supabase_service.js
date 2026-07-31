@@ -17,9 +17,13 @@ window.DnDNexus = window.DnDNexus || {};
     }
 
     init() {
+      // 1. Always bind UI click listeners first so modal can be opened anytime
+      this.bindUI();
+      this.subscribeEventBus();
+
       if (typeof window.supabase === 'undefined') {
         console.warn('Supabase SDK not loaded. Operating in Local/WebRTC mode.');
-        this.updateStatusBadge('Supabase SDK Yok', 'yellow');
+        this.updateStatusBadge('⚡ Supabase (Konfigürasyon)', 'yellow');
         return;
       }
 
@@ -28,9 +32,6 @@ window.DnDNexus = window.DnDNexus || {};
       } else {
         this.updateStatusBadge('⚡ Supabase (Konfigüre Edilmedi)', 'yellow');
       }
-
-      this.bindUI();
-      this.subscribeEventBus();
     }
 
     loadConfig() {
