@@ -61,7 +61,13 @@ window.DnDNexus.executeModalRoll = function() {
       <div class="roll-detail">${detailText}</div>
     `;
 
-    if (window.DnDNexus.broadcastRollEvent) {
+    if (window.DnDNexus.EventBus && window.DnDNexus.EVENTS) {
+      window.DnDNexus.EventBus.publish(window.DnDNexus.EVENTS.DICE_ROLLED, {
+        name: window.DnDNexus.currentRollName,
+        total: total,
+        detailText: detailText
+      });
+    } else if (window.DnDNexus.broadcastRollEvent) {
       window.DnDNexus.broadcastRollEvent(window.DnDNexus.currentRollName, total, detailText);
     }
   }, 250);
