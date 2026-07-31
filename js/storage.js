@@ -73,6 +73,9 @@ window.DnDNexus.triggerAutosave = function() {
     if (window.DnDNexus.broadcastCharacterToParty) {
       window.DnDNexus.broadcastCharacterToParty();
     }
+    if (window.DnDNexus.SupabaseService && window.DnDNexus.SupabaseService.saveCharacterToCloud) {
+      window.DnDNexus.SupabaseService.saveCharacterToCloud(data);
+    }
   }, 400);
 };
 

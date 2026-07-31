@@ -195,17 +195,96 @@ window.DnDNexus = window.DnDNexus || {};
     async saveCharacterToCloud(charData) {
       if (!this.client || !charData || !charData['char-id']) return;
       const code = window.DnDNexus.currentCampaignCode || 'CAMP-8F92A';
+      const user = window.DnDNexus.AuthService ? window.DnDNexus.AuthService.getUser() : { id: 'usr-guest' };
+
+      const fullPayload = {
+        formData: charData,
+        customTrackers: localStorage.getItem('dnd_custom_resources'),
+        activeFeats: localStorage.getItem('dnd_active_feats'),
+        activeWeapons: localStorage.getItem('dnd_active_weapons'),
+        activeMagicItems: localStorage.getItem('dnd_active_magic_items')
+      };
 
       try {
         await this.client.from('characters').upsert({
           id: charData['char-id'],
+          user_id: user.id,
           campaign_code: code,
           char_name: charData['char-name'] || 'Karakter',
-          character_data: charData,
+          character_data: fullPayload,
           updated_at: new Date().toISOString()
         });
       } catch(e) {
-        // Fallback silently if table not created
+        console.warn('Supabase character save error:', e);
+      }
+    }
+
+    async loadCharacterFromCloud(charId) {
+      if (!this.client || !charId) return null;
+      try {
+        const { data, error } = await this.client.from('characters').select('*').eq('id', charId).single();
+        if (error || !data) return null;
+
+        const payload = data.character_data;
+        if (payload && payload.formData && window.DnDNexus.populateForm) {
+          window.DnDNexus.populateForm(payload.formData);
+        }
+        if (payload.customTrackers) localStorage.setItem('dnd_custom_resources', payload.customTrackers);
+        if (payload.activeFeats) localStorage.setItem('dnd_active_feats', payload.activeFeats);
+        
+        return data;
+      } catch(e) {
+        return null;
+      }
+    }
+
+    async saveDMSessionToCloud() {
+      if (!this.client) return;
+      const code = window.DnDNexus.currentCampaignCode || 'CAMP-8F92A';
+      const user = window.DnDNexus.AuthService ? window.DnDNexus.AuthService.getUser() : { id: 'usr-dm', username: 'DM' };
+      const notes = document.getElementById('party-dm-notes')?.value || '';
+      const roundNum = parseInt(document.getElementById('encounter-round-num')?.textContent) || 1;
+
+      try {
+        await this.client.from('dm_sessions').upsert({
+          campaign_code: code,
+          dm_id: user.id,
+          dm_name: user.username,
+          encounter_list: window.DnDNexus.encounterList || [],
+          active_turn_index: window.DnDNexus.activeTurnIndex || 0,
+          round_num: roundNum,
+          journal_notes: notes,
+          soundboard_data: localStorage.getItem('dnd_custom_sounds') || '[]',
+          updated_at: new Date().toISOString()
+        });
+      } catch(e) {
+        console.warn('Supabase DM session save error:', e);
+      }
+    }
+
+    async loadDMSessionFromCloud(campaignCode) {
+      if (!this.client || !campaignCode) return null;
+      try {
+        const { data, error } = await this.client.from('dm_sessions').select('*').eq('campaign_code', campaignCode).single();
+        if (error || !data) return null;
+
+        if (data.encounter_list) {
+          window.DnDNexus.encounterList = data.encounter_list;
+          if (window.DnDNexus.renderEncounterTable) window.DnDNexus.renderEncounterTable(data.active_turn_index || 0);
+        }
+
+        if (data.journal_notes) {
+          const notesElem = document.getElementById('party-dm-notes');
+          if (notesElem) notesElem.value = data.journal_notes;
+        }
+
+        if (data.soundboard_data) {
+          localStorage.setItem('dnd_custom_sounds', typeof data.soundboard_data === 'string' ? data.soundboard_data : JSON.stringify(data.soundboard_data));
+        }
+
+        return data;
+      } catch(e) {
+        return null;
       }
     }
 

@@ -74,6 +74,20 @@ CREATE TABLE IF NOT EXISTS public.roll_events (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- 6. Create DM Sessions Table (DM Dashboard, Encounters, Journal Notes, Soundboard)
+CREATE TABLE IF NOT EXISTS public.dm_sessions (
+  campaign_code TEXT PRIMARY KEY REFERENCES public.campaigns(code) ON DELETE CASCADE,
+  dm_id TEXT NOT NULL,
+  dm_name TEXT NOT NULL,
+  encounter_list JSONB DEFAULT '[]'::jsonb,
+  active_turn_index INT DEFAULT 0,
+  round_num INT DEFAULT 1,
+  journal_notes TEXT DEFAULT '',
+  soundboard_data JSONB DEFAULT '[]'::jsonb,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- 6. Performance Indexes
 CREATE INDEX IF NOT EXISTS idx_characters_campaign_code ON public.characters(campaign_code);
 CREATE INDEX IF NOT EXISTS idx_roll_events_campaign_code ON public.roll_events(campaign_code);
@@ -127,6 +141,13 @@ BEGIN
   ) THEN
     ALTER PUBLICATION supabase_realtime ADD TABLE public.roll_events;
   END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables 
+    WHERE pubname = 'supabase_realtime' AND tablename = 'dm_sessions'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.dm_sessions;
+  END IF;
 END $$;
 
 -- 9. Row Level Security (RLS) Policies
@@ -134,6 +155,7 @@ ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.campaigns ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.characters ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.roll_events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.dm_sessions ENABLE ROW LEVEL SECURITY;
 
 -- Allow Public Anonymous Read & Write Access for D&D 5e Nexus Client App
 DROP POLICY IF EXISTS "Public Read Profiles" ON public.profiles;
@@ -168,6 +190,15 @@ CREATE POLICY "Public Read Roll Events" ON public.roll_events FOR SELECT USING (
 
 DROP POLICY IF EXISTS "Public Insert Roll Events" ON public.roll_events;
 CREATE POLICY "Public Insert Roll Events" ON public.roll_events FOR INSERT WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public Read DM Sessions" ON public.dm_sessions;
+CREATE POLICY "Public Read DM Sessions" ON public.dm_sessions FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Insert DM Sessions" ON public.dm_sessions;
+CREATE POLICY "Public Insert DM Sessions" ON public.dm_sessions FOR INSERT WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public Update DM Sessions" ON public.dm_sessions;
+CREATE POLICY "Public Update DM Sessions" ON public.dm_sessions FOR UPDATE USING (true);
 
 -- ==============================================================================
 -- SCHEMA CREATION COMPLETE 🎉
