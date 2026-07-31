@@ -71,6 +71,14 @@
         🌐 <span id="current-lang-text">TR</span>
       </button>
 
+      <button id="btn-open-lobby" class="btn btn-secondary" title="Kampanya Lobisini Aç" style="border-color: #c084fc; font-weight: 700;">
+        🏰 Lobiyi Aç
+      </button>
+
+      <button id="btn-user-profile" class="btn btn-secondary" title="Kullanıcı Profili & Giriş" style="border-color: #a855f7; font-weight: 700;">
+        <span id="user-profile-display">👤 Giriş Yap</span>
+      </button>
+
       <div id="webrtc-status-badge" class="webrtc-status-badge" title="WebRTC & Live Sync Status" style="display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.4); border-radius: 16px; font-size: 0.78rem; font-weight: 700; color: #e9d5ff; cursor: pointer;" onclick="window.DnDNexus.copyInviteLink()">
         <span class="pulse-dot" style="background-color: #22c55e;"></span>
         <span id="webrtc-status-text">WebRTC Sync</span>
@@ -1257,16 +1265,164 @@
     </div>
   </div>
 
+  <!-- USER LOGIN & PROFILE MODAL -->
+  <div id="login-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box" style="max-width: 460px;">
+      <div class="modal-header">
+        <h3>👤 D&D 5e Nexus - Hesap & Kimlik Girişi</h3>
+        <button id="btn-close-login" class="btn-close">&times;</button>
+      </div>
+
+      <!-- AUTH SUB-TAB SWITCHER -->
+      <div class="dm-subtabs-nav" style="margin: 0; padding: 0 16px; border-bottom: 1px solid var(--border-purple);">
+        <button id="auth-tab-btn-login" class="dm-subtab-btn active" style="flex: 1; text-align: center; padding: 10px;">
+          🔑 GİRİŞ YAP
+        </button>
+        <button id="auth-tab-btn-register" class="dm-subtab-btn" style="flex: 1; text-align: center; padding: 10px;">
+          ✨ KAYIT OL
+        </button>
+      </div>
+
+      <div class="modal-body" style="display: flex; flex-direction: column; gap: 14px; padding-top: 16px;">
+
+        <!-- STATUS / ERROR MESSAGE BOX -->
+        <div id="auth-msg-box" style="display: none; padding: 10px 14px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; text-align: center;"></div>
+
+        <!-- TAB 1: 🔑 GİRİŞ YAP -->
+        <div id="auth-panel-login" style="display: flex; flex-direction: column; gap: 14px;">
+          <div>
+            <label style="font-weight: bold; color: #e9d5ff; font-size: 0.85rem; display: block; margin-bottom: 6px;">KULLANICI ID (USER ID):</label>
+            <input type="text" id="login-id-input" class="input-name" placeholder="Örn: gandalf, thorin..." style="width: 100%; box-sizing: border-box; padding: 10px 14px; font-weight: 700;">
+          </div>
+
+          <div>
+            <label style="font-weight: bold; color: #e9d5ff; font-size: 0.85rem; display: block; margin-bottom: 6px;">ŞİFRE (PASSWORD):</label>
+            <input type="password" id="login-pass-input" class="input-name" placeholder="••••••••" style="width: 100%; box-sizing: border-box; padding: 10px 14px; font-weight: 700;">
+          </div>
+
+          <button id="btn-execute-login" class="btn btn-accent btn-md" style="width: 100%; padding: 12px; font-size: 0.95rem; font-weight: 800; margin-top: 6px;">
+            🔑 HESABA GİRİŞ YAP
+          </button>
+        </div>
+
+        <!-- TAB 2: ✨ KAYIT OL -->
+        <div id="auth-panel-register" style="display: none; flex-direction: column; gap: 14px;">
+          <div>
+            <label style="font-weight: bold; color: #e9d5ff; font-size: 0.85rem; display: block; margin-bottom: 6px;">KULLANICI ID (GİRİŞ İÇİN KULLANILIR):</label>
+            <input type="text" id="reg-id-input" class="input-name" placeholder="Örn: gandalf (en az 3 karakter)" style="width: 100%; box-sizing: border-box; padding: 9px 14px; font-weight: 700;">
+          </div>
+
+          <div>
+            <label style="font-weight: bold; color: #e9d5ff; font-size: 0.85rem; display: block; margin-bottom: 6px;">GÖRÜNÜR İSİM (DISPLAY NAME):</label>
+            <input type="text" id="reg-username-input" class="input-name" placeholder="Örn: Ak Gandalf" style="width: 100%; box-sizing: border-box; padding: 9px 14px; font-weight: 700;">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div>
+              <label style="font-weight: bold; color: #e9d5ff; font-size: 0.85rem; display: block; margin-bottom: 6px;">ŞİFRE:</label>
+              <input type="password" id="reg-pass-input" class="input-name" placeholder="••••••••" style="width: 100%; box-sizing: border-box; padding: 9px 14px; font-weight: 700;">
+            </div>
+            <div>
+              <label style="font-weight: bold; color: #e9d5ff; font-size: 0.85rem; display: block; margin-bottom: 6px;">ŞİFRE TEKRAR:</label>
+              <input type="password" id="reg-pass-confirm-input" class="input-name" placeholder="••••••••" style="width: 100%; box-sizing: border-box; padding: 9px 14px; font-weight: 700;">
+            </div>
+          </div>
+
+          <div>
+            <label style="font-weight: bold; color: #e9d5ff; font-size: 0.85rem; display: block; margin-bottom: 6px;">AVATAR / İKON:</label>
+            <select id="reg-avatar-select" style="width: 100%; padding: 9px; background: rgba(14, 8, 24, 0.95); color: #e9d5ff; border: 1px solid var(--border-purple); border-radius: 8px; font-weight: 700;">
+              <option value="🧙‍♂️">🧙‍♂️ Büyücü / Gandalf</option>
+              <option value="⚔️">⚔️ Savaşçı / Knight</option>
+              <option value="🗡️">🗡️ Hırsız / Rogue</option>
+              <option value="🏹">🏹 Korucu / Ranger</option>
+              <option value="🛡️">🛡️ Paladin / Defender</option>
+              <option value="🐉">🐉 DM / Dragon Master</option>
+              <option value="🔮">🔮 Mistik / Sorcerer</option>
+            </select>
+          </div>
+
+          <button id="btn-execute-register" class="btn btn-accent btn-md" style="width: 100%; padding: 12px; font-size: 0.95rem; font-weight: 800; margin-top: 6px;">
+            ✨ HESAP OLUŞTUR VE GİRİŞ YAP
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- CAMPAIGN LOBBY & MATCHMAKING MODAL -->
+  <div id="lobby-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box" style="max-width: 850px; width: 92%;">
+      <div class="modal-header">
+        <h3>🏰 CANLI KAMPANYA LOBİSİ (CAMPAIGN MATCHMAKING)</h3>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <button id="btn-open-create-campaign" class="btn btn-accent btn-sm" style="font-weight: 800;">
+            ✨ Yeni Kampanya Kur (Host)
+          </button>
+          <button id="btn-close-lobby" class="btn-close">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <p style="color: #c084fc; font-size: 0.88rem; margin-bottom: 16px;">
+          Aşağıda WebRTC ve canlı sekme sinyali üzerinden aktif olan public DM kampanyaları listelenmektedir. Tek tıkla Oyuncu olarak odaya katılabilir veya kendi kampanyanızı Zindan Efendisi olarak kurabilirsiniz.
+        </p>
+        <table class="encounter-table" style="width: 100%;">
+          <thead>
+            <tr>
+              <th>KAMPANYA ADI & ODA KODU</th>
+              <th>DM (ZİNDAN EFENDİSİ)</th>
+              <th>OYUNCULAR</th>
+              <th>DURUM</th>
+              <th style="text-align: right;">EYLEM</th>
+            </tr>
+          </thead>
+          <tbody id="lobby-rooms-tbody">
+            <tr>
+              <td colspan="5" style="text-align:center; color:#c084fc; padding:24px;">
+                🔍 Aktif odalar taranıyor...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <!-- CREATE CAMPAIGN MODAL (DM HOST) -->
+  <div id="create-campaign-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3>✨ YENİ KAMPANYA ODASI KUR (DM HOST)</h3>
+        <button id="btn-close-create-campaign" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body" style="display: flex; flex-direction: column; gap: 14px;">
+        <div>
+          <label style="font-weight: bold; color: #e9d5ff; font-size: 0.85rem; display: block; margin-bottom: 6px;">KAMPANYA ADI (CAMPAIGN NAME):</label>
+          <input type="text" id="create-campaign-name-input" class="input-name" placeholder="Örn: Dragon's Lair, Phandelver..." style="width: 100%; box-sizing: border-box; padding: 10px 14px; font-weight: 700;">
+        </div>
+
+        <div>
+          <label style="font-weight: bold; color: #e9d5ff; font-size: 0.85rem; display: block; margin-bottom: 6px;">ÖZEL ODA KODU (İSTEĞE BAĞLI):</label>
+          <input type="text" id="create-campaign-code-input" class="input-name" placeholder="Örn: CAMP-X92F (Boş bırakılırsa otomatik üretilir)" style="width: 100%; box-sizing: border-box; padding: 10px 14px; font-weight: 700;">
+        </div>
+
+        <button id="btn-submit-create-campaign" class="btn btn-accent btn-md" style="width: 100%; padding: 12px; font-size: 0.95rem; font-weight: 800; margin-top: 6px;">
+          🚀 DM OLARAK KAMPANYAYI BAŞLAT
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Core Event-Driven Micro-Service Architecture Infrastructure -->
-  <script src="js/core/event_bus.js?v=46.0"></script>
-  <script src="js/core/service_registry.js?v=46.0"></script>
+  <script src="js/core/event_bus.js?v=47.0"></script>
+  <script src="js/core/service_registry.js?v=47.0"></script>
 
   <!-- Modular Scripts Loaded Sequentially for Local Disk File:// Protocol Compatibility -->
   <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-  <script src="js/state.js?v=45.0"></script>
-  <script src="js/storage.js?v=45.0"></script>
-  <script src="js/sync.js?v=45.0"></script>
-  <script src="js/services/sync_service.js?v=46.0"></script>
+  <script src="js/state.js?v=47.0"></script>
+  <script src="js/storage.js?v=47.0"></script>
+  <script src="js/services/auth_service.js?v=47.0"></script>
+  <script src="js/sync.js?v=47.0"></script>
+  <script src="js/services/sync_service.js?v=47.0"></script>
+  <script src="js/services/lobby_service.js?v=47.0"></script>
   <script src="js/dice.js?v=45.0"></script>
   <script src="js/services/dice_service.js?v=46.0"></script>
   <script src="js/spells.js?v=45.0"></script>
