@@ -4,6 +4,11 @@
 window.DnDNexus = window.DnDNexus || {};
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Boot Core Event-Driven Micro-Services
+  if (window.DnDNexus.ServiceRegistry) {
+    window.DnDNexus.ServiceRegistry.initAll();
+  }
+
   // Initialize UI components
   window.DnDNexus.initSavingThrows();
   window.DnDNexus.initSkills();
@@ -49,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dmDashboardView.style.display = 'none';
       }
       if (presetSelectorBox) presetSelectorBox.style.display = 'block';
+      if (window.DnDNexus.initWebRTC) window.DnDNexus.initWebRTC();
     } else if (viewName === 'dm') {
       tabDmView?.classList.add('active');
       tabPlayerView?.classList.remove('active');
@@ -64,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       try {
         if (window.DnDNexus.initDMView) window.DnDNexus.initDMView();
+        if (window.DnDNexus.initWebRTC) window.DnDNexus.initWebRTC();
         if (window.DnDNexus.broadcastCharacterToParty) window.DnDNexus.broadcastCharacterToParty();
         if (window.DnDNexus.renderPartyRoster) window.DnDNexus.renderPartyRoster();
         if (window.DnDNexus.syncPartyToEncounter) window.DnDNexus.syncPartyToEncounter();
@@ -248,6 +255,7 @@ function bindEvents() {
 
   document.getElementById('btn-print')?.addEventListener('click', () => window.print());
   document.getElementById('btn-reset')?.addEventListener('click', window.DnDNexus.resetSheet);
+  document.getElementById('btn-copy-invite')?.addEventListener('click', window.DnDNexus.copyInviteLink);
 
   document.getElementById('preset-select')?.addEventListener('change', (e) => {
     const presetKey = e.target.value;
@@ -310,6 +318,7 @@ function checkInviteURL() {
   const urlParams = new URLSearchParams(window.location.search);
   const joinCode = urlParams.get('join');
   if (joinCode) {
+    window.DnDNexus.setCampaignCode(joinCode);
     const banner = document.getElementById('campaign-join-banner');
     if (banner) banner.style.display = 'block';
     const nameElem = document.getElementById('banner-campaign-name');
@@ -317,8 +326,9 @@ function checkInviteURL() {
     const joinBtn = document.getElementById('btn-join-campaign');
     if (joinBtn) {
       joinBtn.onclick = () => {
+        window.DnDNexus.setCampaignCode(joinCode);
         window.DnDNexus.broadcastCharacterToParty(joinCode);
-        alert(`Karakteriniz ${joinCode} kampanyasına başarıyla bağlandı!`);
+        alert(`Karakteriniz ${joinCode} kampanyasına WebRTC & Canlı Sekme üzerinden başarıyla bağlandı!`);
         banner.style.display = 'none';
       };
     }

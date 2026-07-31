@@ -71,6 +71,11 @@
         🌐 <span id="current-lang-text">TR</span>
       </button>
 
+      <div id="webrtc-status-badge" class="webrtc-status-badge" title="WebRTC & Live Sync Status" style="display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.4); border-radius: 16px; font-size: 0.78rem; font-weight: 700; color: #e9d5ff; cursor: pointer;" onclick="window.DnDNexus.copyInviteLink()">
+        <span class="pulse-dot" style="background-color: #22c55e;"></span>
+        <span id="webrtc-status-text">WebRTC Sync</span>
+      </div>
+
       <div id="autosave-badge" class="autosave-badge">
         <span class="pulse-dot"></span> Otomatik Kaydedildi
       </div>
@@ -1252,11 +1257,18 @@
     </div>
   </div>
 
+  <!-- Core Event-Driven Micro-Service Architecture Infrastructure -->
+  <script src="js/core/event_bus.js?v=46.0"></script>
+  <script src="js/core/service_registry.js?v=46.0"></script>
+
   <!-- Modular Scripts Loaded Sequentially for Local Disk File:// Protocol Compatibility -->
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
   <script src="js/state.js?v=45.0"></script>
   <script src="js/storage.js?v=45.0"></script>
   <script src="js/sync.js?v=45.0"></script>
+  <script src="js/services/sync_service.js?v=46.0"></script>
   <script src="js/dice.js?v=45.0"></script>
+  <script src="js/services/dice_service.js?v=46.0"></script>
   <script src="js/spells.js?v=45.0"></script>
   <script src="js/encounter.js?v=45.0"></script>
   <script src="js/monsters_data.js?v=45.0"></script>

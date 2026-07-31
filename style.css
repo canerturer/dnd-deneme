@@ -248,6 +248,16 @@ body, html {
   border: 1px solid rgba(45, 212, 191, 0.3);
 }
 
+.webrtc-status-badge {
+  transition: all 0.2s ease;
+}
+
+.webrtc-status-badge:hover {
+  background: rgba(168, 85, 247, 0.3) !important;
+  border-color: rgba(168, 85, 247, 0.8) !important;
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
+}
+
 .pulse-dot {
   width: 8px;
   height: 8px;
