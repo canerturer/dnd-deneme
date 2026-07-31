@@ -1,0 +1,223 @@
+name,category,prerequisite,asiOptions,fullDetails
+Alert,Origin Feat,Level 1,,"You gain the following benefits.
+Initiative Proficiency. When you roll Initiative, you can add your Proficiency Bonus to the roll.
+Initiative Swap. Immediately after you roll Initiative, you can swap your Initiative with the Initiative of one willing ally in the same combat. You can't make this swap if you or the ally has the Incapacitated condition."
+Crafter,Origin Feat,Level 1,,"You gain the following benefits.
+Tool Proficiency. You gain proficiency with three different Artisan's Tools of your choice.
+Discount. Whenever you buy a nonmagical item, you receive a 20 percent discount on it.
+Fast Crafting. When you finish a Long Rest, you can craft one piece of gear from the Fast Crafting table, provided you have the Artisan's Tools associated with that item and proficiency with those tools."
+Healer,Origin Feat,Level 1,,"You gain the following benefits.
+Battle Medic. If you have a Healer's Kit, you can expend one use of it and tend to a creature within 5 feet of yourself as a Utilize action. That creature can expend one of its Hit Point Dice, and you then roll that die. The creature regains Hit Points equal to the roll plus your Proficiency Bonus.
+Healing Rerolls. Whenever you roll a die to determine Hit Points restored with a spell or Battle Medic, you can reroll 1s."
+Lucky,Origin Feat,Level 1,,"You gain the following benefits.
+Luck Points. You have a number of Luck Points equal to your Proficiency Bonus. You regain expended Luck Points when you finish a Long Rest.
+Advantage. When you roll a d20 for a D20 Test, you can spend 1 Luck Point to give yourself Advantage on the roll.
+Disadvantage. When a creature rolls a d20 for an attack roll against you, you can spend 1 Luck Point to impose Disadvantage on that roll."
+Magic Initiate,Origin Feat,Level 1,"int,wis,cha","You gain the following benefits.
+Two Cantrips. You learn two cantrips of your choice from the Cleric, Druid, or Wizard spell list.
+Level 1 Spell. Choose a level 1 spell from the same spell list. You always have that spell prepared and can cast it once per Long Rest without a spell slot, or using spell slots."
+Musician,Origin Feat,Level 1,,"Origin Feat
+You gain the following benefits.
+Instrument Training. You gain proficiency with three Musical Instruments of your choice.
+Encouraging Song. As you finish a Short or Long Rest, you can play a song on a Musical Instrument with which you have proficiency and give Heroic Inspiration to allies who hear the song. The number of allies you can affect in this way equals your Proficiency Bonus."
+Savage Attacker,Origin Feat,Level 1,,"You gain the following benefits.
+Damage Rerolls. Once per turn when you hit a target with a weapon, you can roll the weapon's damage dice twice and use either roll."
+Skilled,Origin Feat,Level 1,,"You gain the following benefits.
+Skill Proficiencies. You gain proficiency in any combination of three skills or tools of your choice. You can take this feat more than once."
+Tavern Brawler,Origin Feat,Level 1,"str,con","You gain the following benefits.
+Enhanced Unarmed Strike. When you hit with your Unarmed Strike and deal damage, you can deal Bludgeoning damage equal to 1d4 plus your Strength modifier instead of normal damage.
+Damage Rerolls. Whenever you roll a 1 on a damage die for an Unarmed Strike, you can reroll the die."
+Tough,Origin Feat,Level 1,,"You gain the following benefits.
+Hit Point Increase. Your Hit Point maximum increases by an amount equal to twice your character level when you gain this feat. Whenever you gain a level thereafter, your Hit Point maximum increases by an additional 2 Hit Points."
+Ability Score Improvement,General Feat,Level 4+,"str,dex,con,int,wis,cha","Ability Score Improvement
+General Feat (Level 4+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Ability Score Improvement."
+Actor,General Feat,"Level 4+, Charisma 13+",cha,"Actor
+General Feat (Level 4+, Charisma 13+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Actor."
+Athlete,General Feat,"Level 4+, Strength or Dexterity 13+","str,dex","Athlete
+General Feat (Level 4+, Strength or Dexterity 13+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Athlete."
+Charger,General Feat,"Level 4+, Strength or Dexterity 13+","str,dex","Charger
+General Feat (Level 4+, Strength or Dexterity 13+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Charger."
+Chef,General Feat,Level 4+,"con,wis","Chef
+General Feat (Level 4+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Chef."
+Crossbow Expert,General Feat,"Level 4+, Dexterity 13+",dex,"Crossbow Expert
+General Feat (Level 4+, Dexterity 13+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Crossbow Expert."
+Crusher,General Feat,Level 4+,"str,con","Crusher
+General Feat (Level 4+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Crusher."
+Defensive Duelist,General Feat,"Level 4+, Dexterity 13+",dex,"Defensive Duelist
+General Feat (Level 4+, Dexterity 13+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Defensive Duelist."
+Dual Wielder,General Feat,"Level 4+, Strength or Dexterity 13+","str,dex","Dual Wielder
+General Feat (Level 4+, Strength or Dexterity 13+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Dual Wielder."
+Durable,General Feat,Level 4+,con,"Durable
+General Feat (Level 4+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Durable."
+Elemental Adept,General Feat,"Level 4+, Spellcasting feature","int,wis,cha","Elemental Adept
+General Feat (Level 4+, Spellcasting feature)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Elemental Adept."
+Fey-Touched,General Feat,Level 4+,"int,wis,cha","Fey-Touched
+General Feat (Level 4+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Fey-Touched."
+Grappler,General Feat,"Level 4+, Strength or Dexterity 13+","str,dex","Grappler
+General Feat (Level 4+, Strength or Dexterity 13+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Grappler."
+Great Weapon Master,General Feat,"Level 4+, Strength 13+",str,"Great Weapon Master
+General Feat (Level 4+, Strength 13+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Great Weapon Master."
+Heavily Armored,General Feat,"Level 4+, Medium Armor Proficiency",str,"Heavily Armored
+General Feat (Level 4+, Medium Armor Proficiency)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Heavily Armored."
+Heavy Armor Master,General Feat,"Level 4+, Heavy Armor Proficiency",str,"Heavy Armor Master
+General Feat (Level 4+, Heavy Armor Proficiency)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Heavy Armor Master."
+Inspiring Leader,General Feat,"Level 4+, Wisdom or Charisma 13+","wis,cha","Inspiring Leader
+General Feat (Level 4+, Wisdom or Charisma 13+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Inspiring Leader."
+Keen Mind,General Feat,"Level 4+, Intelligence 13+",int,"Keen Mind
+General Feat (Level 4+, Intelligence 13+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Keen Mind."
+Lightly Armored,General Feat,Level 4+,"str,dex","Lightly Armored
+General Feat (Level 4+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Lightly Armored."
+Mage Slayer,General Feat,Level 4+,"str,dex","Mage Slayer
+General Feat (Level 4+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Mage Slayer."
+Martial Weapon Training,General Feat,Level 4+,"str,dex","Martial Weapon Training
+General Feat (Level 4+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Martial Weapon Training."
+Medium Armor Master,General Feat,"Level 4+, Medium Armor Proficiency","str,dex","Medium Armor Master
+General Feat (Level 4+, Medium Armor Proficiency)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Medium Armor Master."
+Moderately Armored,General Feat,"Level 4+, Light Armor Proficiency","str,dex","Moderately Armored
+General Feat (Level 4+, Light Armor Proficiency)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Moderately Armored."
+Mounted Combatant,General Feat,Level 4+,"str,dex","Mounted Combatant
+General Feat (Level 4+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Mounted Combatant."
+Observant,General Feat,"Level 4+, Intelligence or Wisdom 13+","int,wis","Observant
+General Feat (Level 4+, Intelligence or Wisdom 13+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Observant."
+Piercer,General Feat,Level 4+,"str,dex","Piercer
+General Feat (Level 4+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Piercer."
+Poisoner,General Feat,Level 4+,"dex,int","Poisoner
+General Feat (Level 4+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Poisoner."
+Polearm Master,General Feat,"Level 4+, Strength or Dexterity 13+","str,dex","Polearm Master
+General Feat (Level 4+, Strength or Dexterity 13+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Polearm Master."
+Resilient,General Feat,Level 4+,"str,dex,con,int,wis,cha","Resilient
+General Feat (Level 4+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Resilient."
+Ritual Caster,General Feat,"Level 4+, Intelligence, Wisdom, or Charisma 13+","int,wis,cha","Ritual Caster
+General Feat (Level 4+, Intelligence, Wisdom, or Charisma 13+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Ritual Caster."
+Sentinel,General Feat,"Level 4+, Strength or Dexterity 13+","str,dex","Sentinel
+General Feat (Level 4+, Strength or Dexterity 13+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Sentinel."
+Shadow-Touched,General Feat,Level 4+,"int,wis,cha","Shadow-Touched
+General Feat (Level 4+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Shadow-Touched."
+Sharpshooter,General Feat,"Level 4+, Dexterity 13+",dex,"Sharpshooter
+General Feat (Level 4+, Dexterity 13+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Sharpshooter."
+Shield Master,General Feat,"Level 4+, Shield Proficiency",str,"Shield Master
+General Feat (Level 4+, Shield Proficiency)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Shield Master."
+Skill Expert,General Feat,Level 4+,"str,dex,con,int,wis,cha","Skill Expert
+General Feat (Level 4+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Skill Expert."
+Skulker,General Feat,"Level 4+, Dexterity 13+",dex,"Skulker
+General Feat (Level 4+, Dexterity 13+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Skulker."
+Slasher,General Feat,Level 4+,"str,dex","Slasher
+General Feat (Level 4+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Slasher."
+Speedy,General Feat,"Level 4+, Constitution or Dexterity 13+","con,dex","Speedy
+General Feat (Level 4+, Constitution or Dexterity 13+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Speedy."
+Spell Sniper,General Feat,"Level 4+, Spellcasting feature","int,wis,cha","Spell Sniper
+General Feat (Level 4+, Spellcasting feature)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Spell Sniper."
+Telekinetic,General Feat,Level 4+,"int,wis,cha","Telekinetic
+General Feat (Level 4+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Telekinetic."
+War Caster,General Feat,"Level 4+, Spellcasting feature","int,wis,cha","War Caster
+General Feat (Level 4+, Spellcasting feature)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for War Caster."
+Weapon Master,General Feat,Level 4+,"str,dex","Weapon Master
+General Feat (Level 4+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Weapon Master."
+Archery,Fighting Style Feat,Fighting Style Feature,,"Archery
+Fighting Style Feat (Fighting Style Feature)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Archery."
+Blind Fighting,Fighting Style Feat,Fighting Style Feature,,"Blind Fighting
+Fighting Style Feat (Fighting Style Feature)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Blind Fighting."
+Defense,Fighting Style Feat,Fighting Style Feature,,"Defense
+Fighting Style Feat (Fighting Style Feature)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Defense."
+Dueling,Fighting Style Feat,Fighting Style Feature,,"Dueling
+Fighting Style Feat (Fighting Style Feature)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Dueling."
+Great Weapon Fighting,Fighting Style Feat,Fighting Style Feature,,"Great Weapon Fighting
+Fighting Style Feat (Fighting Style Feature)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Great Weapon Fighting."
+Interception,Fighting Style Feat,Fighting Style Feature,,"Interception
+Fighting Style Feat (Fighting Style Feature)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Interception."
+Protection,Fighting Style Feat,Fighting Style Feature,,"Protection
+Fighting Style Feat (Fighting Style Feature)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Protection."
+Thrown Weapon Fighting,Fighting Style Feat,Fighting Style Feature,,"Thrown Weapon Fighting
+Fighting Style Feat (Fighting Style Feature)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Thrown Weapon Fighting."
+Two-Weapon Fighting,Fighting Style Feat,Fighting Style Feature,,"Two-Weapon Fighting
+Fighting Style Feat (Fighting Style Feature)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Two-Weapon Fighting."
+Unarmed Fighting,Fighting Style Feat,Fighting Style Feature,,"Unarmed Fighting
+Fighting Style Feat (Fighting Style Feature)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Unarmed Fighting."
+Boon of Combat Prowess,Epic Boon Feat,Level 19+,"str,dex,con,int,wis,cha","Boon of Combat Prowess
+Epic Boon Feat (Level 19+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Boon of Combat Prowess."
+Boon of Dimensional Travel,Epic Boon Feat,Level 19+,"str,dex,con,int,wis,cha","Boon of Dimensional Travel
+Epic Boon Feat (Level 19+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Boon of Dimensional Travel."
+Boon of Energy Resistance,Epic Boon Feat,Level 19+,"str,dex,con,int,wis,cha","Boon of Energy Resistance
+Epic Boon Feat (Level 19+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Boon of Energy Resistance."
+Boon of Fate,Epic Boon Feat,Level 19+,"str,dex,con,int,wis,cha","Boon of Fate
+Epic Boon Feat (Level 19+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Boon of Fate."
+Boon of Fortitude,Epic Boon Feat,Level 19+,"str,dex,con,int,wis,cha","Boon of Fortitude
+Epic Boon Feat (Level 19+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Boon of Fortitude."
+Boon of Irresistible Offense,Epic Boon Feat,Level 19+,"str,dex","Boon of Irresistible Offense
+Epic Boon Feat (Level 19+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Boon of Irresistible Offense."
+Boon of Recovery,Epic Boon Feat,Level 19+,con,"Boon of Recovery
+Epic Boon Feat (Level 19+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Boon of Recovery."
+Boon of Skill,Epic Boon Feat,Level 19+,"str,dex,con,int,wis,cha","Boon of Skill
+Epic Boon Feat (Level 19+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Boon of Skill."
+Boon of Speed,Epic Boon Feat,Level 19+,dex,"Boon of Speed
+Epic Boon Feat (Level 19+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Boon of Speed."
+Boon of Spell Recall,Epic Boon Feat,Level 19+,"int,wis,cha","Boon of Spell Recall
+Epic Boon Feat (Level 19+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Boon of Spell Recall."
+Boon of the Night Spirit,Epic Boon Feat,Level 19+,"dex,int,wis,cha","Boon of the Night Spirit
+Epic Boon Feat (Level 19+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Boon of the Night Spirit."
+Boon of Truesight,Epic Boon Feat,Level 19+,"wis,cha","Boon of Truesight
+Epic Boon Feat (Level 19+)
+You gain special benefits and tactical enhancements as detailed in PHB 2024 for Boon of Truesight."

@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>D&D Nexus - Veri Kataloğu Oluşturucu</title>
+<style>
+  :root {
+    --bg: #0b0712;
+    --panel: #1c122f;
+    --accent: #a855f7;
+    --text: #f8fafc;
+    --muted: #a1a1aa;
+    --ok: #22c55e;
+    --err: #f87171;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: radial-gradient(circle at top, #1c122f, #0b0712);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 32px 16px 80px;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  h1 {
+    font-size: 1.6rem;
+    margin-bottom: 4px;
+    background: linear-gradient(90deg, var(--accent), #f0abfc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .subtitle { color: var(--muted); margin-bottom: 20px; font-size: 0.95rem; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .tab-btn {
+    background: rgba(28, 18, 47, 0.7);
+    border: 1px solid rgba(168, 85, 247, 0.25);
+    color: var(--muted);
+    padding: 9px 16px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .tab-btn.active {
+    background: linear-gradient(135deg, #a855f7, #7c3aed);
+    color: white;
+    border-color: transparent;
+  }
+  .card {
+    background: rgba(28, 18, 47, 0.7);
+    border: 1px solid rgba(168, 85, 247, 0.25);
+    border-radius: 14px;
+    padding: 22px 24px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(6px);
+  }
+  .card h2 { font-size: 1.05rem; margin: 0 0 12px; color: var(--accent); }
+  .card p { line-height: 1.6; color: #d4d4d8; font-size: 0.92rem; }
+  ol { padding-left: 20px; color: #d4d4d8; font-size: 0.92rem; line-height: 1.8; }
+  code {
+    background: rgba(168,85,247,0.15);
+    padding: 2px 6px;
+    border-radius: 5px;
+    font-size: 0.88em;
+  }
+  .drop {
+    border: 2px dashed rgba(168, 85, 247, 0.4);
+    border-radius: 12px;
+    padding: 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .drop:hover, .drop.drag { border-color: var(--accent); background: rgba(168,85,247,0.08); }
+  .drop input { display: none; }
+  .btn {
+    background: linear-gradient(135deg, #a855f7, #7c3aed);
+    color: white;
+    border: none;
+    padding: 11px 22px;
+    border-radius: 9px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 14px;
+  }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn.secondary {
+    background: rgba(168,85,247,0.15);
+    border: 1px solid rgba(168,85,247,0.4);
+  }
+  .status { margin-top: 16px; font-size: 0.9rem; white-space: pre-wrap; }
+  .status.ok { color: var(--ok); }
+  .status.err { color: var(--err); }
+  .status.warn { color: #facc15; }
+  .filename { color: var(--accent); font-weight: 600; }
+  textarea {
+    width: 100%;
+    height: 160px;
+    background: #0b0712;
+    color: #d4d4d8;
+    border: 1px solid rgba(168,85,247,0.25);
+    border-radius: 8px;
+    padding: 10px;
+    font-family: Consolas, monospace;
+    font-size: 0.78rem;
+    margin-top: 12px;
+    resize: vertical;
+  }
+  .badge {
+    display: inline-block;
+    background: rgba(34,197,94,0.15);
+    color: var(--ok);
+    border: 1px solid rgba(34,197,94,0.4);
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    margin-left: 8px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 id="pageTitle">🎲 Veri Kataloğu Oluşturucu</h1>
+  <div class="subtitle" id="pageSubtitle">Excel/CSV master dosyasını js/*.js dosyasına dönüştürür. Sunucu gerekmez, çift tıklayarak açılır.</div>
+
+  <div class="tabs" id="datasetTabs"></div>
+
+  <div class="card">
+    <h2>Nasıl çalışır?</h2>
+    <ol>
+      <li>Ana klasördeki <code id="hintMasterFile">feats.xlsx</code> (veya <code id="hintMasterCsv">feats.csv</code>) dosyasını Excel'de aç, satırları düzenle/ekle/sil, kaydet.</li>
+      <li>Aşağıya o dosyayı sürükle veya seç.</li>
+      <li>Önizlemeyi kontrol et.</li>
+      <li>"İndir" butonuyla inen dosyayı projenin <code id="hintOutputFile">js/feats_data.js</code> dosyasının üzerine kaydet.</li>
+      <li>Sayfayı (index.html) yenile — değişiklikler siteye yansır. Ana site koduna hiç dokunmadın.</li>
+    </ol>
+    <p id="hintColumns">Beklenen sütunlar: <code>name, category, prerequisite, asiOptions, fullDetails</code>.</p>
+  </div>
+
+  <div class="card">
+    <h2>1. Dosyayı Seç</h2>
+    <label class="drop" id="dropZone">
+      <input type="file" id="fileInput" accept=".xlsx,.xls,.csv">
+      <div id="dropLabel">📄 Master dosyayı buraya sürükle<br><span style="color:var(--muted); font-size:0.85rem;">ya da tıklayıp seç</span></div>
+    </label>
+    <div id="parseStatus" class="status"></div>
+  </div>
+
+  <div class="card" id="resultCard" style="display:none;">
+    <h2>2. Önizleme &amp; İndir <span id="countBadge" class="badge"></span></h2>
+    <div id="warnBox" class="status warn"></div>
+    <textarea id="preview" readonly></textarea>
+    <div>
+      <button class="btn" id="btnDownload">⬇ İndir</button>
+      <button class="btn secondary" id="btnCopy">📋 Panoya Kopyala</button>
+    </div>
+  </div>
+</div>
+
+<script src="vendor/xlsx.full.min.js"></script>
+<script src="../js/csv_parser.js"></script>
+<script>
+(function() {
+  function slugify(name) {
+    return (name || '').toString().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
+
+  function makeDescription(fullDetails) {
+    const details = (fullDetails || '').toString().trim();
+    return details.length > 200 ? details.slice(0, 200) + '...' : details;
+  }
+
+  function normalizeList(val, lowercase) {
+    const toItem = s => lowercase ? s.toString().trim().toLowerCase() : s.toString().trim();
+    if (Array.isArray(val)) return val.map(toItem).filter(Boolean);
+    if (typeof val === 'string') return val.split(',').map(toItem).filter(Boolean);
+    return [];
+  }
+
+  function toBool(val) {
+    const s = (val === undefined || val === null) ? '' : val.toString().trim().toLowerCase();
+    return s === 'true' || s === 'evet' || s === '1' || s === 'yes';
+  }
+
+  function toNum(val) {
+    const n = parseInt(val, 10);
+    return isNaN(n) ? 0 : n;
+  }
+
+  const DATASETS = {
+    feats: {
+      label: '✨ Feats',
+      title: '🎲 Feat Kataloğu Oluşturucu',
+      subtitle: 'feats.xlsx / feats.csv → js/feats_data.js dönüştürücüsü.',
+      masterFile: 'feats.xlsx',
+      masterCsv: 'feats.csv',
+      outputFile: 'feats_data.js',
+      jsVar: 'window.DnDNexus.FEATS_2024',
+      columnsHint: 'Beklenen sütunlar: <code>name, category, prerequisite, asiOptions, fullDetails</code>. <code>id</code> isimden, kısa açıklama (<code>description</code>) ise <code>fullDetails</code>\'in ilk ~200 karakterinden otomatik üretilir. <code>asiOptions</code> birden fazla stat için virgülle ayrılır (örn. <code>int,wis,cha</code>).',
+      headerComment: 'D&D 5e (2024) Feats Database',
+      build(rawRows) {
+        const warnings = [];
+        const seenIds = new Map();
+        const items = rawRows.map((row, idx) => {
+          const name = (row.name || '').toString().trim();
+          if (!name) { warnings.push(`Satır ${idx + 2}: "name" boş, atlandı.`); return null; }
+          const id = slugify(name);
+          if (seenIds.has(id)) warnings.push(`Satır ${idx + 2}: "${name}" isimli kayıt, "${seenIds.get(id)}" ile aynı id'yi ("${id}") üretiyor.`);
+          seenIds.set(id, name);
+          const fullDetails = (row.fullDetails || '').toString().trim();
+          return {
+            id, name,
+            category: (row.category || '').toString().trim() || 'General Feat',
+            prerequisite: (row.prerequisite || '').toString().trim() || '—',
+            asiOptions: normalizeList(row.asiOptions, true),
+            description: makeDescription(fullDetails),
+            fullDetails
+          };
+        }).filter(Boolean);
+        return { items, warnings };
+      }
+    },
+    weapons: {
+      label: '⚔️ Weapons',
+      title: '⚔️ Silah Kataloğu Oluşturucu',
+      subtitle: 'weapons.xlsx / weapons.csv → js/weapons_data.js dönüştürücüsü.',
+      masterFile: 'weapons.xlsx',
+      masterCsv: 'weapons.csv',
+      outputFile: 'weapons_data.js',
+      jsVar: 'window.DnDNexus.WEAPONS_LIST',
+      columnsHint: 'Beklenen sütunlar: <code>name, category, damageDice, damageType, properties, mastery, weight, cost</code>. <code>id</code> isimden otomatik üretilir. <code>properties</code> virgülle ayrılır (örn. <code>Finesse, Light, Thrown (Range 20/60)</code>). <code>category</code>: Simple Melee / Simple Ranged / Martial Melee / Martial Ranged.',
+      headerComment: 'D&D 5e (2024) Weapons Database (PHB 2024, Chapter 6: Equipment)',
+      build(rawRows) {
+        const warnings = [];
+        const seenIds = new Map();
+        const items = rawRows.map((row, idx) => {
+          const name = (row.name || '').toString().trim();
+          if (!name) { warnings.push(`Satır ${idx + 2}: "name" boş, atlandı.`); return null; }
+          const id = slugify(name);
+          if (seenIds.has(id)) warnings.push(`Satır ${idx + 2}: "${name}" isimli silah, "${seenIds.get(id)}" ile aynı id'yi ("${id}") üretiyor.`);
+          seenIds.set(id, name);
+          return {
+            id, name,
+            category: (row.category || '').toString().trim() || 'Simple Melee',
+            damageDice: (row.damageDice || '').toString().trim() || '1d4',
+            damageType: (row.damageType || '').toString().trim() || 'Bludgeoning',
+            properties: normalizeList(row.properties, false),
+            mastery: (row.mastery || '').toString().trim(),
+            weight: (row.weight || '').toString().trim(),
+            cost: (row.cost || '').toString().trim()
+          };
+        }).filter(Boolean);
+        return { items, warnings };
+      }
+    },
+    monsters: {
+      label: '🐉 Monsters',
+      title: '🐉 Canavar Kataloğu Oluşturucu',
+      subtitle: 'monsters.xlsx / monsters.csv → js/monsters_data.js dönüştürücüsü.',
+      masterFile: 'monsters.xlsx',
+      masterCsv: 'monsters.csv',
+      outputFile: 'monsters_data.js',
+      jsVar: 'window.DnDNexus.monstersList',
+      columnsHint: 'Beklenen sütunlar: <code>id, name, type, cr, ac, hp, speed, str, dex, con, int, wis, cha, traits, actions</code>. İsimler Türkçe/İngilizce karışık olduğundan (örn. "İskelet (Skeleton)") <code>id</code> sütunu zorunludur — boş bırakılırsa isimden otomatik üretilir ama Türkçe karakterler yüzünden bozuk çıkabilir.',
+      headerComment: 'D&D 5e Monster Bestiary Dataset',
+      build(rawRows) {
+        const warnings = [];
+        const seenIds = new Map();
+        const items = rawRows.map((row, idx) => {
+          const name = (row.name || '').toString().trim();
+          if (!name) { warnings.push(`Satır ${idx + 2}: "name" boş, atlandı.`); return null; }
+          const explicitId = (row.id || '').toString().trim();
+          const id = explicitId || ('m-' + slugify(name));
+          if (seenIds.has(id)) warnings.push(`Satır ${idx + 2}: "${name}" isimli canavar, "${seenIds.get(id)}" ile aynı id'yi ("${id}") üretiyor.`);
+          seenIds.set(id, name);
+          return {
+            id, name,
+            type: (row.type || '').toString().trim() || 'Orta Yaratık (Beast)',
+            cr: (row.cr || '').toString().trim() || '1/4',
+            ac: toNum(row.ac),
+            hp: toNum(row.hp),
+            speed: (row.speed || '').toString().trim() || '9m',
+            str: toNum(row.str), dex: toNum(row.dex), con: toNum(row.con),
+            int: toNum(row.int), wis: toNum(row.wis), cha: toNum(row.cha),
+            traits: (row.traits || '').toString().trim(),
+            actions: (row.actions || '').toString().trim()
+          };
+        }).filter(Boolean);
+        return { items, warnings };
+      }
+    },
+    magicItems: {
+      label: '💍 Magic Items',
+      title: '💍 Magic Item Kataloğu Oluşturucu',
+      subtitle: 'magic-items.xlsx / magic-items.csv → js/magic_items_data.js dönüştürücüsü.',
+      masterFile: 'magic-items.xlsx',
+      masterCsv: 'magic-items.csv',
+      outputFile: 'magic_treasures_data.js',
+      jsVar: 'window.DnDNexus.MAGIC_ITEMS_LIST',
+      columnsHint: 'Beklenen sütunlar: <code>name, rarity, category, attunement, description</code>. <code>id</code> isimden otomatik üretilir. <code>rarity</code>: Common / Uncommon / Rare / Very Rare / Legendary. <code>attunement</code>: TRUE veya FALSE.',
+      headerComment: 'D&D 5e Magic Items Database (genel SRD tarzı bilgiden derlenmiştir)',
+      build(rawRows) {
+        const warnings = [];
+        const seenIds = new Map();
+        const items = rawRows.map((row, idx) => {
+          const name = (row.name || '').toString().trim();
+          if (!name) { warnings.push(`Satır ${idx + 2}: "name" boş, atlandı.`); return null; }
+          const id = slugify(name);
+          if (seenIds.has(id)) warnings.push(`Satır ${idx + 2}: "${name}" isimli eşya, "${seenIds.get(id)}" ile aynı id'yi ("${id}") üretiyor.`);
+          seenIds.set(id, name);
+          return {
+            id, name,
+            rarity: (row.rarity || '').toString().trim() || 'Common',
+            category: (row.category || '').toString().trim() || 'Wondrous Item',
+            attunement: toBool(row.attunement),
+            description: (row.description || '').toString().trim()
+          };
+        }).filter(Boolean);
+        return { items, warnings };
+      }
+    }
+  };
+
+  let currentKey = 'feats';
+  let generatedCode = '';
+
+  const tabsEl = document.getElementById('datasetTabs');
+  const pageTitle = document.getElementById('pageTitle');
+  const pageSubtitle = document.getElementById('pageSubtitle');
+  const hintMasterFile = document.getElementById('hintMasterFile');
+  const hintMasterCsv = document.getElementById('hintMasterCsv');
+  const hintOutputFile = document.getElementById('hintOutputFile');
+  const hintColumns = document.getElementById('hintColumns');
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const parseStatus = document.getElementById('parseStatus');
+  const resultCard = document.getElementById('resultCard');
+  const preview = document.getElementById('preview');
+  const warnBox = document.getElementById('warnBox');
+  const countBadge = document.getElementById('countBadge');
+  const btnDownload = document.getElementById('btnDownload');
+  const btnCopy = document.getElementById('btnCopy');
+
+  Object.keys(DATASETS).forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (key === currentKey ? ' active' : '');
+    btn.textContent = DATASETS[key].label;
+    btn.addEventListener('click', () => selectDataset(key));
+    btn.dataset.key = key;
+    tabsEl.appendChild(btn);
+  });
+
+  function selectDataset(key) {
+    currentKey = key;
+    const ds = DATASETS[key];
+    tabsEl.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.key === key));
+    pageTitle.textContent = ds.title;
+    pageSubtitle.textContent = ds.subtitle;
+    hintMasterFile.textContent = ds.masterFile;
+    hintMasterCsv.textContent = ds.masterCsv;
+    hintOutputFile.textContent = 'js/' + ds.outputFile;
+    hintColumns.innerHTML = ds.columnsHint;
+    dropLabelReset();
+    resultCard.style.display = 'none';
+    parseStatus.textContent = '';
+    generatedCode = '';
+  }
+
+  function dropLabelReset() {
+    document.getElementById('dropLabel').innerHTML =
+      `📄 ${DATASETS[currentKey].masterFile} veya ${DATASETS[currentKey].masterCsv} dosyasını buraya sürükle<br><span style="color:var(--muted); font-size:0.85rem;">ya da tıklayıp seç</span>`;
+  }
+
+  selectDataset('feats');
+
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('drag');
+    if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', e => {
+    if (e.target.files[0]) handleFile(e.target.files[0]);
+  });
+
+  function renderResult(items, warnings, sourceLabel) {
+    const ds = DATASETS[currentKey];
+    generatedCode =
+`/**
+ * ${ds.headerComment}
+ * OTOMATİK ÜRETİLDİ — tools/build-feats.html ile ${sourceLabel} dosyasından oluşturuldu.
+ * Elle düzenleme yapma; değişiklik için kaynak dosyayı düzenleyip aracı tekrar çalıştır.
+ */
+window.DnDNexus = window.DnDNexus || {};
+
+${ds.jsVar} = ${JSON.stringify(items, null, 2)};
+`;
+    preview.value = generatedCode;
+    countBadge.textContent = `${items.length} kayıt`;
+    warnBox.textContent = warnings.length ? '⚠ ' + warnings.join('\n⚠ ') : '';
+    resultCard.style.display = 'block';
+  }
+
+  function handleFile(file) {
+    const ds = DATASETS[currentKey];
+    const ext = file.name.split('.').pop().toLowerCase();
+    parseStatus.className = 'status';
+    parseStatus.textContent = `İşleniyor: ${file.name}...`;
+    resultCard.style.display = 'none';
+
+    const reader = new FileReader();
+
+    if (ext === 'csv') {
+      reader.onload = e => {
+        try {
+          const rows = window.DnDNexus.parseCSV(e.target.result);
+          if (!rows.length) throw new Error('CSV boş görünüyor veya ayrıştırılamadı.');
+          const { items, warnings } = ds.build(rows);
+          renderResult(items, warnings, file.name);
+          parseStatus.className = 'status ok';
+          parseStatus.innerHTML = `✔ <span class="filename">${file.name}</span> okundu — ${items.length} kayıt bulundu.`;
+        } catch (err) {
+          parseStatus.className = 'status err';
+          parseStatus.textContent = 'Hata: ' + err.message;
+        }
+      };
+      reader.readAsText(file, 'UTF-8');
+    } else if (ext === 'xlsx' || ext === 'xls') {
+      reader.onload = e => {
+        try {
+          const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+          const sheet = wb.Sheets[wb.SheetNames[0]];
+          const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+          if (!rows.length) throw new Error('Excel dosyasında satır bulunamadı.');
+          const { items, warnings } = ds.build(rows);
+          renderResult(items, warnings, file.name);
+          parseStatus.className = 'status ok';
+          parseStatus.innerHTML = `✔ <span class="filename">${file.name}</span> okundu — ${items.length} kayıt bulundu.`;
+        } catch (err) {
+          parseStatus.className = 'status err';
+          parseStatus.textContent = 'Hata: ' + err.message;
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    } else {
+      parseStatus.className = 'status err';
+      parseStatus.textContent = 'Desteklenmeyen dosya türü. Lütfen .xlsx veya .csv seçin.';
+    }
+  }
+
+  btnDownload.addEventListener('click', () => {
+    if (!generatedCode) return;
+    const blob = new Blob([generatedCode], { type: 'text/javascript;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = DATASETS[currentKey].outputFile;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  btnCopy.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(generatedCode);
+      btnCopy.textContent = '✔ Kopyalandı!';
+      setTimeout(() => btnCopy.textContent = '📋 Panoya Kopyala', 1500);
+    } catch (e) {
+      preview.select();
+      document.execCommand('copy');
+    }
+  });
+})();
+</script>
+</body>
+</html>

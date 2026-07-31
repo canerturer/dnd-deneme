@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>D&D 5e Nexus - Character Sheet & DM Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=9.0">
+</head>
+<body class="royal-purple-theme">
+
+  <!-- Floating Control Bar -->
+  <header class="control-bar no-print">
+    <div class="control-left">
+      <div class="logo-badge">
+        <span class="dnd-icon">🔮</span>
+        <span class="logo-title">D&D 5E NEXUS</span>
+      </div>
+
+      <div class="view-switcher">
+        <button id="tab-player-view" class="tab-btn active">
+          🛡️ Oyuncu Kağıdı
+        </button>
+        <button id="tab-dm-view" class="tab-btn">
+          👑 DM Dashboard <span id="party-count-badge" class="badge">0</span>
+        </button>
+      </div>
+
+      <div class="preset-selector" id="preset-selector-box">
+        <label for="preset-select" class="sr-only">Örnek Karakter Yükle</label>
+        <select id="preset-select">
+          <option value="">-- Örnek Karakter Yükle --</option>
+          <option value="fighter">Thorin Ironfist (Savaşçı - Seviye 3)</option>
+          <option value="wizard">Elysia Starweaver (Büyücü - Seviye 3)</option>
+          <option value="rogue">Shadow Kael (Hırsız - Seviye 3)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="control-actions">
+      <button id="btn-short-rest" class="btn btn-secondary" title="Kısa Dinlenme Yap">
+        <span class="icon">☕</span> Kısa Dinlenme
+      </button>
+      <button id="btn-long-rest" class="btn btn-accent" title="Uzun Dinlenme Yap">
+        <span class="icon">🌙</span> Uzun Dinlenme
+      </button>
+
+      <button id="btn-save-json" class="btn btn-secondary" title="Karakteri İndir">
+        <span class="icon">💾</span> Kaydet
+      </button>
+      <button id="btn-load-json" class="btn btn-secondary" title="Karakter Yükle">
+        <span class="icon">📂</span> Yükle
+      </button>
+      <input type="file" id="file-input-json" accept=".json" style="display: none;">
+      
+      <button id="btn-dice-modal" class="btn btn-accent" title="Zar Atıcı">
+        <span class="icon">🎲</span> Zar At
+      </button>
+      
+      <button id="btn-print" class="btn btn-secondary" title="Yazdır veya PDF Yap">
+        <span class="icon">🖨️</span> Yazdır
+      </button>
+      
+      <button id="btn-reset" class="btn btn-danger" title="Sayfayı Temizle">
+        <span class="icon">🧹</span> Temizle
+      </button>
+
+      <button id="btn-lang-toggle" class="btn btn-secondary" title="Dil Seçimi / Switch Language" style="border-color: #a855f7; font-weight: 800;">
+        🌐 <span id="current-lang-text">TR</span>
+      </button>
+
+      <div id="autosave-badge" class="autosave-badge">
+        <span class="pulse-dot"></span> Otomatik Kaydedildi
+      </div>
+    </div>
+  </header>
+
+  <!-- Player Campaign Join Banner -->
+  <div id="campaign-join-banner" class="campaign-banner no-print" style="display: none;">
+    <div class="banner-content">
+      <span class="banner-icon">🏰</span>
+      <div class="banner-text">
+        <strong id="banner-campaign-name">Phandelver Madenleri</strong> kampanyasına davet edildiniz!
+      </div>
+      <button id="btn-join-campaign" class="btn btn-accent">
+        ⚔️ Karakterimi Kampanyaya Bağla
+      </button>
+    </div>
+  </div>
+
+  <!-- VIEW 1: PLAYER CHARACTER SHEET -->
+  <div id="player-sheet-view" class="view-section active">
+    <div class="sheet-container">
+      
+      <!-- HEADER SECTION (Classic D&D 5e Ribbon Header) -->
+      <section class="sheet-header classic-header">
+        <div class="header-name-box classic-name-box">
+          <input type="text" id="char-name" class="input-name" placeholder="Karakterinizin Adı..." data-i18n-ph="char_name_placeholder">
+          <label for="char-name" class="label-header" data-i18n="char_name_label">KARAKTER ADI</label>
+        </div>
+
+        <div class="header-details-grid classic-details-grid">
+          <div class="field-box">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <label for="char-class-level" data-i18n="class_level_label">SINIF VE SEVİYE</label>
+              <button id="btn-open-class-modal" type="button" class="btn-tiny" onclick="window.DnDNexus.openClassModal()" style="font-size:0.7rem; padding:1px 5px;" title="12 Ana Sınıf Kataloğundan Seç">📖 Seç</button>
+            </div>
+            <input type="text" id="char-class-level" placeholder="Barbar 3" data-i18n-ph="class_level_placeholder">
+          </div>
+          <div class="field-box">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <label for="char-subclass">ALT SINIF (SUBCLASS)</label>
+              <button id="btn-open-subclass-modal" type="button" class="btn-tiny" onclick="window.DnDNexus.openSubclassModal()" style="font-size:0.7rem; padding:1px 5px;" title="Alt Sınıf Kataloğundan Seç">📖 Seç</button>
+            </div>
+            <input type="text" id="char-subclass" placeholder="Path of the Berserker">
+          </div>
+          <div class="field-box"><label for="char-background" data-i18n="background_label">GEÇMİŞ</label><input type="text" id="char-background" placeholder="Mungan" data-i18n-ph="background_placeholder"></div>
+          <div class="field-box"><label for="char-player-name" data-i18n="player_name_label">OYUNCU ADI</label><input type="text" id="char-player-name" placeholder="Oyuncu Adı" data-i18n-ph="player_name_placeholder"></div>
+          <div class="field-box"><label for="char-race" data-i18n="race_label">IRK</label><input type="text" id="char-race" placeholder="Cüce" data-i18n-ph="race_placeholder"></div>
+          <div class="field-box"><label for="char-alignment" data-i18n="alignment_label">YÖNELİM</label><input type="text" id="char-alignment" placeholder="Sadık İyi" data-i18n-ph="alignment_placeholder"></div>
+          <div class="field-box"><label for="char-xp" data-i18n="xp_label">DENEYİM PUANI</label><input type="number" id="char-xp" placeholder="0"></div>
+        </div>
+      </section>
+
+      <!-- SUB-PAGE NAVIGATION TABS -->
+      <div class="sub-page-nav no-print">
+        <button id="btn-sub-page1" class="sub-page-tab active">
+          📄 1. SAYFA: TEMEL KARAKTER & BECERİLER
+        </button>
+        <button id="btn-sub-page2" class="sub-page-tab">
+          🔮 2. SAYFA: SINIF YETENEKLERİ, KAYNAKLAR & BÜYÜLER
+        </button>
+      </div>
+
+      <!-- PAGE 1: CORE CHARACTER STATS & SKILLS (CLASSIC D&D 5E LAYOUT) -->
+      <div id="player-page-1" class="player-sub-page active">
+        <main class="sheet-main classic-main">
+          
+          <!-- COLUMN 1: ABILITY SCORES + SAVING THROWS & SKILLS (OFFICIAL D&D 5E LAYOUT) -->
+          <div class="sheet-col col-left classic-col-1">
+            
+            <!-- Upper Block: Side-by-Side Stat Tombstones (102px) & Skills Column -->
+            <div class="col-1-layout-grid">
+              
+              <!-- 6 Vertical Tombstone Ability Cards -->
+              <div class="ability-tombstones-column">
+                <div class="ability-tombstone-box" data-ability="str">
+                  <div class="tombstone-header">
+                    <span class="ability-name" data-i18n="str_label">GÜÇ</span>
+                  </div>
+                  <input type="number" id="str-score" class="ability-score-input" value="10" min="1" max="30">
+                  <div class="tombstone-mod-badge" id="str-mod-display">+0</div>
+                  <button class="roll-stat-btn-tiny" data-roll-type="ability" data-name="Güç (STR)" data-mod-id="str-mod-display" title="Zar At">🎲</button>
+                </div>
+
+                <div class="ability-tombstone-box" data-ability="dex">
+                  <div class="tombstone-header">
+                    <span class="ability-name" data-i18n="dex_label">ÇEVİKLİK</span>
+                  </div>
+                  <input type="number" id="dex-score" class="ability-score-input" value="10" min="1" max="30">
+                  <div class="tombstone-mod-badge" id="dex-mod-display">+0</div>
+                  <button class="roll-stat-btn-tiny" data-roll-type="ability" data-name="DEX" data-mod-id="dex-mod-display" title="Zar At">🎲</button>
+                </div>
+
+                <div class="ability-tombstone-box" data-ability="con">
+                  <div class="tombstone-header">
+                    <span class="ability-name" data-i18n="con_label">DAYANIKLILIK</span>
+                  </div>
+                  <input type="number" id="con-score" class="ability-score-input" value="10" min="1" max="30">
+                  <div class="tombstone-mod-badge" id="con-mod-display">+0</div>
+                  <button class="roll-stat-btn-tiny" data-roll-type="ability" data-name="CON" data-mod-id="con-mod-display" title="Zar At">🎲</button>
+                </div>
+
+                <div class="ability-tombstone-box" data-ability="int">
+                  <div class="tombstone-header">
+                    <span class="ability-name" data-i18n="int_label">ZEKA</span>
+                  </div>
+                  <input type="number" id="int-score" class="ability-score-input" value="10" min="1" max="30">
+                  <div class="tombstone-mod-badge" id="int-mod-display">+0</div>
+                  <button class="roll-stat-btn-tiny" data-roll-type="ability" data-name="INT" data-mod-id="int-mod-display" title="Zar At">🎲</button>
+                </div>
+
+                <div class="ability-tombstone-box" data-ability="wis">
+                  <div class="tombstone-header">
+                    <span class="ability-name" data-i18n="wis_label">BİLGELİK</span>
+                  </div>
+                  <input type="number" id="wis-score" class="ability-score-input" value="10" min="1" max="30">
+                  <div class="tombstone-mod-badge" id="wis-mod-display">+0</div>
+                  <button class="roll-stat-btn-tiny" data-roll-type="ability" data-name="WIS" data-mod-id="wis-mod-display" title="Zar At">🎲</button>
+                </div>
+
+                <div class="ability-tombstone-box" data-ability="cha">
+                  <div class="tombstone-header">
+                    <span class="ability-name" data-i18n="cha_label">KARİZMA</span>
+                  </div>
+                  <input type="number" id="cha-score" class="ability-score-input" value="10" min="1" max="30">
+                  <div class="tombstone-mod-badge" id="cha-mod-display">+0</div>
+                  <button class="roll-stat-btn-tiny" data-roll-type="ability" data-name="CHA" data-mod-id="cha-mod-display" title="Zar At">🎲</button>
+                </div>
+              </div>
+
+              <!-- Sub-column: Inspiration, PB, Saves, Skills -->
+              <div class="col-1-subcolumn">
+                <div class="classic-pill-box inspiration-box">
+                  <input type="checkbox" id="inspiration" class="custom-checkbox circle">
+                  <span class="pill-title" data-i18n="inspiration_label">İLHAM</span>
+                </div>
+
+                <div class="classic-pill-box prof-bonus-box">
+                  <input type="text" id="prof-bonus-override" class="pill-input" placeholder="+2" value="+2">
+                  <span class="pill-title" data-i18n="prof_bonus_label">YETERLİLİK BONUSU</span>
+                </div>
+
+                <div class="section-panel classic-panel saving-throws-panel">
+                  <h3 class="panel-header" data-i18n="saving_throws_header">KAYDETME ATIŞLARI</h3>
+                  <div class="check-list" id="saving-throws-list"></div>
+                </div>
+
+                <div class="section-panel classic-panel skills-panel">
+                  <h3 class="panel-header" data-i18n="skills_header">BECERİLER</h3>
+                  <div class="check-list" id="skills-list"></div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Lower Block: Full Width Passive Perception & Other Proficiencies -->
+            <div class="col-1-bottom-full">
+              <div class="classic-passive-box">
+                <div class="passive-val-badge" id="passive-perception-val">10</div>
+                <span class="passive-label" data-i18n="passive_perception_label">PASİF ALGI</span>
+              </div>
+
+              <div class="section-panel classic-panel other-profs-panel">
+                <h3 class="panel-header" data-i18n="other_profs_header">DİĞER YETERLİLİKLER VE DİLLER</h3>
+                <textarea id="other-proficiencies" placeholder="Zırhlar, silahlar, aletler ve bildiğiniz diller..." data-i18n-ph="other_profs_placeholder"></textarea>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- COLUMN 2: COMBAT TRIO, HP, HIT DICE, ATTACKS, EQUIPMENT -->
+          <div class="sheet-col col-middle classic-col-2">
+            
+            <!-- Top Combat Trio: Armor Class, Initiative, Speed -->
+            <div class="classic-combat-trio">
+              <div class="combat-shield-card">
+                <span class="combat-card-title" data-i18n="ac_title">ZIRH SINIFI</span>
+                <input type="number" id="ac-score" class="combat-card-input" value="10">
+              </div>
+
+              <div class="combat-curved-card">
+                <span class="combat-card-title" data-i18n="initiative_title">İNİSİYATİF</span>
+                <input type="text" id="initiative-score" class="combat-card-input" value="+0">
+                <button class="roll-tiny-btn" id="btn-roll-initiative" title="İnisiyatif At">🎲</button>
+              </div>
+
+              <div class="combat-rounded-card">
+                <span class="combat-card-title" data-i18n="speed_title">HIZ</span>
+                <input type="text" id="speed-score" class="combat-card-input" value="9m (30ft)">
+              </div>
+            </div>
+
+            <!-- HP Panel -->
+            <div class="section-panel classic-panel hp-panel">
+              <div class="hp-top-stats-row">
+                <div class="hp-top-stat-box">
+                  <label for="hp-max" data-i18n="max_hp_label">MAKSİMUM CAN</label>
+                  <input type="number" id="hp-max" value="20" min="1" class="hp-stat-input">
+                </div>
+                <div class="hp-top-stat-box">
+                  <label for="hp-temp" data-i18n="temp_hp_label">GEÇİCİ CAN</label>
+                  <input type="number" id="hp-temp" value="0" min="0" class="hp-stat-input">
+                </div>
+              </div>
+
+              <div class="hp-current-area">
+                <label for="hp-current" class="hp-center-label" data-i18n="current_hp_label">MEVCUT CAN</label>
+                <input type="number" id="hp-current" class="hp-current-big-input" value="20">
+                <div class="hp-bar-bg"><div id="hp-bar-fill" class="hp-bar-fill" style="width: 100%;"></div></div>
+                <div class="hp-quick-controls">
+                  <button class="hp-btn hp-sub" data-amount="-5">-5</button>
+                  <button class="hp-btn hp-sub" data-amount="-1">-1</button>
+                  <button class="hp-btn hp-add" data-amount="+1">+1</button>
+                  <button class="hp-btn hp-add" data-amount="+5">+5</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hit Dice & Death Saves Row -->
+            <div class="hitdice-death-split-row">
+              <div class="section-panel classic-panel hitdice-box">
+                <div class="panel-header-mini" data-i18n="hit_dice_title">CAN ZARLARI</div>
+                <div class="hitdice-line">
+                  <label for="hitdice-total">Total:</label>
+                  <input type="text" id="hitdice-total" placeholder="1d8" value="1d8" class="hitdice-inline-input">
+                </div>
+                <div class="hitdice-current-display">
+                  <input type="text" id="hitdice-current" placeholder="1d8" value="1d8" class="hitdice-big-input">
+                </div>
+              </div>
+
+              <div class="section-panel classic-panel death-saves-box">
+                <div class="panel-header-mini" data-i18n="death_saves_title">ÖLÜM KAYDETMELERİ</div>
+                <div class="death-saves-classic-rows">
+                  <div class="death-save-classic-line">
+                    <span data-i18n="successes_label">BAŞARILAR</span>
+                    <div class="death-save-circles">
+                      <input type="checkbox" id="death-success-1" class="custom-checkbox circle">
+                      <input type="checkbox" id="death-success-2" class="custom-checkbox circle">
+                      <input type="checkbox" id="death-success-3" class="custom-checkbox circle">
+                    </div>
+                  </div>
+                  <div class="death-save-classic-line">
+                    <span data-i18n="failures_label">BAŞARISIZLIKLAR</span>
+                    <div class="death-save-circles">
+                      <input type="checkbox" id="death-fail-1" class="custom-checkbox circle fail">
+                      <input type="checkbox" id="death-fail-2" class="custom-checkbox circle fail">
+                      <input type="checkbox" id="death-fail-3" class="custom-checkbox circle fail">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Attacks & Spellcasting -->
+            <div class="section-panel classic-panel attacks-spellcasting-panel">
+              <div class="panel-header-with-btn">
+                <h3 class="panel-header" data-i18n="attacks_header">SALDIRILAR VE BÜYÜLER</h3>
+                <div style="display:flex; gap:6px;">
+                  <button id="btn-open-weapons-modal" class="btn-tiny" title="PHB 2024 silah kataloğundan seç">📖 Kataloğdan Seç</button>
+                  <button id="btn-add-weapon" class="btn-tiny" data-i18n="add_weapon_btn">+ Silah Ekle</button>
+                </div>
+              </div>
+              <table class="weapons-table classic-weapons-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="weapon_name_col">SİLAH ADI</th>
+                    <th data-i18n="atk_bonus_col">ATIS BONUSU</th>
+                    <th data-i18n="damage_type_col">HASAR / TÜR</th>
+                    <th class="no-print" data-i18n="action_col">İŞLEM</th>
+                  </tr>
+                </thead>
+                <tbody id="weapons-tbody"></tbody>
+              </table>
+              <div class="attack-notes-box">
+                <textarea id="attack-notes" placeholder="Manevralar, Sneak Attack, Fighting Style notları..." data-i18n-ph="attack_notes_placeholder"></textarea>
+              </div>
+
+              <!-- Subclass Attacks, Damage Bonuses & Stances Container -->
+              <div id="subclass-attacks-container" class="subclass-attacks-box" style="margin-top: 10px; display: none;">
+                <div style="font-weight: 800; font-size: 0.82rem; color: #c084fc; font-family: var(--font-header); margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
+                  <span>⚔️ ALT SINIF SALDIRI & MANEVRA YETENEKLERİ:</span>
+                  <span id="subclass-attacks-badge-name" style="font-size: 0.75rem; color: #34d399; font-weight: bold;"></span>
+                </div>
+                <div id="subclass-attacks-pills-list" style="display: flex; flex-direction: column; gap: 6px;"></div>
+              </div>
+            </div>
+
+            <!-- Equipment Box with Pointed Hex Coins -->
+            <div class="section-panel classic-panel equipment-panel">
+              <div class="panel-header-with-btn">
+                <h3 class="panel-header" data-i18n="equipment_header">EKİPMAN</h3>
+                <button id="btn-open-magic-items-modal" class="btn-tiny" title="Büyülü eşya kataloğundan seç">💍 Magic Item Kataloğu</button>
+                <div class="attunement-box">
+                  <span data-i18n="attunement_label">UYUM:</span>
+                  <input type="checkbox" id="attune-1" class="custom-checkbox">
+                  <input type="checkbox" id="attune-2" class="custom-checkbox">
+                  <input type="checkbox" id="attune-3" class="custom-checkbox">
+                </div>
+              </div>
+              
+              <div class="equipment-classic-layout">
+                <!-- Vertical Stack of 5 Pointed Hex Coins -->
+                <div class="classic-coins-stack">
+                  <div class="coin-hex-box"><span class="coin-tag">CP</span><input type="number" id="coin-cp" value="0"></div>
+                  <div class="coin-hex-box"><span class="coin-tag">SP</span><input type="number" id="coin-sp" value="0"></div>
+                  <div class="coin-hex-box"><span class="coin-tag">EP</span><input type="number" id="coin-ep" value="0"></div>
+                  <div class="coin-hex-box"><span class="coin-tag">GP</span><input type="number" id="coin-gp" value="15"></div>
+                  <div class="coin-hex-box"><span class="coin-tag">PP</span><input type="number" id="coin-pp" value="0"></div>
+                </div>
+                
+                <div class="equipment-text-area-box">
+                  <textarea id="equipment-list" placeholder="Eşyalarınız, iksirleriniz, macera çantanız..." data-i18n-ph="equipment_placeholder"></textarea>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- COLUMN 3: PERSONALITY TRAITS, IDEALS, BONDS, FLAWS, FEATURES & FEATS -->
+          <div class="sheet-col col-right classic-col-3">
+            <div class="section-panel classic-panel trait-box">
+              <h3 class="panel-header" data-i18n="personality_header">KİŞİLİK ÖZELLİKLERİ</h3>
+              <textarea id="trait-personality"></textarea>
+            </div>
+            
+            <div class="section-panel classic-panel trait-box">
+              <h3 class="panel-header" data-i18n="ideals_header">İDEALLER</h3>
+              <textarea id="trait-ideals"></textarea>
+            </div>
+
+            <div class="section-panel classic-panel trait-box">
+              <h3 class="panel-header" data-i18n="bonds_header">BAĞLAR</h3>
+              <textarea id="trait-bonds"></textarea>
+            </div>
+
+            <div class="section-panel classic-panel trait-box">
+              <h3 class="panel-header" data-i18n="flaws_header">KUSURLAR</h3>
+              <textarea id="trait-flaws"></textarea>
+            </div>
+
+            <!-- Feats & Special Features Section -->
+            <div class="section-panel classic-panel feats-panel">
+              <div class="panel-header-with-btn">
+                <h3 class="panel-header" data-i18n="feats_header">✨ FEAT'LER VE ÖZEL YETENEKLER</h3>
+                <button id="btn-open-feats-modal" class="btn-tiny" data-i18n="add_feat_btn">+ Feat Ekle</button>
+              </div>
+              <div id="feats-capacity-badge" class="feats-capacity-badge"></div>
+              <div id="active-feats-list" class="active-feats-container"></div>
+            </div>
+          </div>
+
+        </main>
+      </div>
+
+      <!-- PAGE 2: CLASS FEATURES, RESOURCE TRACKERS & SPELLBOOK -->
+      <div id="player-page-2" class="player-sub-page">
+        <main class="sheet-main-page2">
+          
+          <!-- CLASS FEATURES TEXT PANEL -->
+          <div class="section-panel flex-panel traits-features-panel-page2">
+            <h3 class="panel-header">📜 SINIF ÖZELLİKLERİ VE YETENEKLERİ (CLASS FEATURES & TRAITS)</h3>
+            
+            <!-- Dynamic Subclass Features Display Container on Page 2 -->
+            <div id="page2-subclass-features-container" class="subclass-attacks-box" style="margin-bottom: 10px; display: none;">
+              <div style="font-weight: 800; font-size: 0.84rem; color: #c084fc; font-family: var(--font-header); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+                <span>🛡️ AKTİF ALT SINIF YETENEKLERİ VE MANEVRALARI:</span>
+                <span id="page2-subclass-badge-name" style="font-size: 0.78rem; color: #34d399; font-weight: bold;"></span>
+              </div>
+              <div id="page2-subclass-pills-list" style="display: flex; flex-direction: column; gap: 6px;"></div>
+            </div>
+
+            <textarea id="features-traits" placeholder="Sınıfınızdan gelen özel yetenekler (örn: Action Surge, Second Wind, Cunning Action, Wild Shape, Metamagic, Unarmored Movement)..."></textarea>
+          </div>
+
+          <!-- CLASS RESOURCES & FEATURE TRACKERS PANEL -->
+          <div class="section-panel class-resources-panel">
+            <div class="panel-header-with-btn">
+              <h3 class="panel-header">⚡ SINIF KAYNAKLARI VE ÖZEL TAKİPÇİLER (MONK KI, MANEVRALAR, RAGE, FEAT HAKLARI)</h3>
+              <div class="resource-header-actions">
+                <select id="preset-resource-select" class="preset-res-select">
+                  <option value="">+ Hazır Kaynak Ekle --</option>
+                  <option value="monk-ki">☯️ Monk Ki / Focus Points</option>
+                  <option value="fighter-maneuvers">⚔️ Fighter Superiority / Manevra Zarı</option>
+                  <option value="barbarian-rage">😡 Barbarian Rage</option>
+                  <option value="bardic-inspiration">🎵 Bardic Inspiration</option>
+                  <option value="sorcery-points">⚡ Sorcerer Sorcery Points</option>
+                  <option value="channel-divinity">✝️ Channel Divinity</option>
+                  <option value="feat-lucky">🎲 Feat: Lucky Points</option>
+                  <option value="feat-magic-initiate">🔮 Feat: Magic Initiate (Free Cast)</option>
+                </select>
+                <button id="btn-open-custom-resource-modal" class="btn-tiny">+ Özel Ekle</button>
+              </div>
+            </div>
+            <div id="resource-trackers-list" class="resource-trackers-grid"></div>
+          </div>
+
+          <!-- REDESIGNED EXPANDED SPELLBOOK & SPELL SLOTS PANEL -->
+          <div class="section-panel spellbook-panel">
+            <div class="panel-header-with-btn">
+              <h3 class="panel-header">🔮 BÜYÜ KİTABI VE BÜYÜ SLOTLARI (SPELLBOOK & SLOTS)</h3>
+              <button id="btn-add-spell" class="btn-tiny">+ Büyü Ekle</button>
+            </div>
+
+            <!-- Spellcasting Stats Row -->
+            <div class="spell-stats-row">
+              <div class="spell-stat-box">
+                <label>BÜYÜ YETENEĞİ</label>
+                <select id="spell-ability-select">
+                  <option value="int">INT (Zeka)</option>
+                  <option value="wis">WIS (Bilgelik)</option>
+                  <option value="cha">CHA (Karizma)</option>
+                </select>
+              </div>
+              <div class="spell-stat-box"><label>BÜYÜ SAVING DC</label><div class="spell-stat-val" id="spell-save-dc">13</div></div>
+              <div class="spell-stat-box"><label>BÜYÜ SALDIRI BONUSU</label><div class="spell-stat-val" id="spell-attack-bonus">+5</div></div>
+            </div>
+
+            <!-- 1st to 6th Level Spell Slots Expanded Visual Grid -->
+            <div class="spell-slots-expanded-grid">
+              <div class="slot-level-card" data-level="1">
+                <div class="slot-card-header">
+                  <span>1. SEVİYE SLOTLAR</span>
+                  <span class="slot-count-badge" id="slot-badge-1">4/4</span>
+                </div>
+                <div class="slot-bubbles-container" id="slot-bubbles-1"></div>
+                <div class="slot-inputs-row">
+                  <label>Max: <input type="number" id="slots-1-max" value="4" min="0" max="10" class="slot-num"></label>
+                </div>
+              </div>
+
+              <div class="slot-level-card" data-level="2">
+                <div class="slot-card-header">
+                  <span>2. SEVİYE SLOTLAR</span>
+                  <span class="slot-count-badge" id="slot-badge-2">2/2</span>
+                </div>
+                <div class="slot-bubbles-container" id="slot-bubbles-2"></div>
+                <div class="slot-inputs-row">
+                  <label>Max: <input type="number" id="slots-2-max" value="2" min="0" max="10" class="slot-num"></label>
+                </div>
+              </div>
+
+              <div class="slot-level-card" data-level="3">
+                <div class="slot-card-header">
+                  <span>3. SEVİYE SLOTLAR</span>
+                  <span class="slot-count-badge" id="slot-badge-3">0/0</span>
+                </div>
+                <div class="slot-bubbles-container" id="slot-bubbles-3"></div>
+                <div class="slot-inputs-row">
+                  <label>Max: <input type="number" id="slots-3-max" value="0" min="0" max="10" class="slot-num"></label>
+                </div>
+              </div>
+
+              <div class="slot-level-card" data-level="4">
+                <div class="slot-card-header">
+                  <span>4. SEVİYE SLOTLAR</span>
+                  <span class="slot-count-badge" id="slot-badge-4">0/0</span>
+                </div>
+                <div class="slot-bubbles-container" id="slot-bubbles-4"></div>
+                <div class="slot-inputs-row">
+                  <label>Max: <input type="number" id="slots-4-max" value="0" min="0" max="10" class="slot-num"></label>
+                </div>
+              </div>
+
+              <div class="slot-level-card" data-level="5">
+                <div class="slot-card-header">
+                  <span>5. SEVİYE SLOTLAR</span>
+                  <span class="slot-count-badge" id="slot-badge-5">0/0</span>
+                </div>
+                <div class="slot-bubbles-container" id="slot-bubbles-5"></div>
+                <div class="slot-inputs-row">
+                  <label>Max: <input type="number" id="slots-5-max" value="0" min="0" max="10" class="slot-num"></label>
+                </div>
+              </div>
+
+              <div class="slot-level-card" data-level="6">
+                <div class="slot-card-header">
+                  <span>6. SEVİYE SLOTLAR</span>
+                  <span class="slot-count-badge" id="slot-badge-6">0/0</span>
+                </div>
+                <div class="slot-bubbles-container" id="slot-bubbles-6"></div>
+                <div class="slot-inputs-row">
+                  <label>Max: <input type="number" id="slots-6-max" value="0" min="0" max="10" class="slot-num"></label>
+                </div>
+              </div>
+
+              <div class="slot-level-card" data-level="7">
+                <div class="slot-card-header">
+                  <span>7. SEVİYE SLOTLAR</span>
+                  <span class="slot-count-badge" id="slot-badge-7">0/0</span>
+                </div>
+                <div class="slot-bubbles-container" id="slot-bubbles-7"></div>
+                <div class="slot-inputs-row">
+                  <label>Max: <input type="number" id="slots-7-max" value="0" min="0" max="10" class="slot-num"></label>
+                </div>
+              </div>
+
+              <div class="slot-level-card" data-level="8">
+                <div class="slot-card-header">
+                  <span>8. SEVİYE SLOTLAR</span>
+                  <span class="slot-count-badge" id="slot-badge-8">0/0</span>
+                </div>
+                <div class="slot-bubbles-container" id="slot-bubbles-8"></div>
+                <div class="slot-inputs-row">
+                  <label>Max: <input type="number" id="slots-8-max" value="0" min="0" max="10" class="slot-num"></label>
+                </div>
+              </div>
+
+              <div class="slot-level-card" data-level="9">
+                <div class="slot-card-header">
+                  <span>9. SEVİYE SLOTLAR</span>
+                  <span class="slot-count-badge" id="slot-badge-9">0/0</span>
+                </div>
+                <div class="slot-bubbles-container" id="slot-bubbles-9"></div>
+                <div class="slot-inputs-row">
+                  <label>Max: <input type="number" id="slots-9-max" value="0" min="0" max="10" class="slot-num"></label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Prepared Spells Table -->
+            <table class="spells-table">
+              <thead>
+                <tr>
+                  <th style="width: 40px; text-align: center;">HAZIR</th>
+                  <th>BÜYÜ ADI</th>
+                  <th style="width: 50px;">SEVİYE</th>
+                  <th>MENZİL / ETKİ / AÇIKLAMA</th>
+                  <th class="no-print" style="width: 90px;">İŞLEM</th>
+                </tr>
+              </thead>
+              <tbody id="spells-tbody"></tbody>
+            </table>
+          </div>
+
+      </main>
+    </div>
+
+    <footer class="sheet-footer">
+      <span>D&D 5th Edition Interactive Character Sheet &bull; Antigravity Canvas</span>
+    </footer>
+
+  </div>
+</div>
+
+  <!-- VIEW 2: DM DASHBOARD -->
+  <div id="dm-dashboard-view" class="view-section">
+    <div class="dm-container">
+      
+      <section class="dm-header-card">
+        <div class="dm-header-left">
+          <div class="dm-title-row">
+            <span class="dm-badge">👑 ZİNDAN EFENDİSİ (DM)</span>
+            <input type="text" id="campaign-title-input" class="campaign-title-edit" value="Phandelver Madenleri">
+          </div>
+          <p class="dm-subtitle">Partideki tüm oyuncu karakterlerinin canlı durumu, HP barları ve büyü slotları</p>
+        </div>
+
+        <div class="dm-header-right">
+          <div class="invite-box">
+            <span class="invite-label">KAMPANYA DAVET KODU:</span>
+            <code id="dm-campaign-code">CAMP-8F92A</code>
+            <button id="btn-copy-invite" class="btn btn-accent btn-sm">📋 Davet Linkini Kopyala</button>
+          </div>
+          <button id="btn-load-sample-party" class="btn btn-accent btn-sm">⚔️ Örnek Partiyi Yükle</button>
+          <button id="btn-new-campaign" class="btn btn-secondary btn-sm">✨ Yeni Kampanya</button>
+        </div>
+      </section>
+
+      <section class="dm-toolbar">
+        <div class="toolbar-left">
+          <span class="toolbar-title">🛠️ DM PARTİ ARAÇLARI:</span>
+          <button id="btn-dm-group-perception" class="btn btn-secondary btn-sm">👁️ Grubun Pasif Algı Kontrolü</button>
+          <button id="btn-dm-group-initiative" class="btn btn-secondary btn-sm">🎲 Grup İnisiyatifi At</button>
+        </div>
+        <div class="toolbar-right">
+          <span id="sync-status-indicator" class="sync-status"><span class="pulse-dot"></span> Canlı Sekme Eşzamanlaması Aktif</span>
+        </div>
+      </section>
+
+      <!-- DM SUB-TABS NAVIGATION BAR -->
+      <div class="dm-subtabs-nav">
+        <button id="dm-subtab-party" class="dm-subtab-btn active" onclick="window.DnDNexus.switchDMSubTab('party')">
+          👥 PARTİ & ZAR MOTORU
+        </button>
+        <button id="dm-subtab-combat" class="dm-subtab-btn" onclick="window.DnDNexus.switchDMSubTab('combat')">
+          ⚔️ SAVAŞ & CANAVARLAR
+        </button>
+        <button id="dm-subtab-journal" class="dm-subtab-btn" onclick="window.DnDNexus.switchDMSubTab('journal')">
+          📖 KAMPANYA & GÜNLÜK
+        </button>
+        <button id="dm-subtab-rules" class="dm-subtab-btn" onclick="window.DnDNexus.switchDMSubTab('rules')">
+          📜 KURAL REHBERİ
+        </button>
+      </div>
+
+      <!-- PANEL 1: 👥 PARTİ & GRUP ZARLARI -->
+      <div id="dm-tab-panel-party" class="dm-tab-panel active">
+        <!-- PARTY ROSTER GRID -->
+        <section class="party-roster-section" style="margin-bottom: 20px;">
+          <h2 class="party-section-title">🛡️ CANLI PARTİ ÜYELERİ (PARTY ROSTER)</h2>
+          <div id="party-roster-grid" class="party-roster-grid"></div>
+        </section>
+
+        <!-- DM FEATURE 3: 🎲 GİZLİ DM ZARLARI & TOPLU GRUP ZAR MOTORU -->
+        <section class="dm-section-card">
+          <h3 class="dm-card-title">🎲 TOPLU GRUP ZAR MOTORU & GİZLİ DM ZARLARI (GROUP CHECKS & SAVES)</h3>
+          <div class="group-checks-row" style="display: flex; gap: 12px; align-items: center;">
+            <button class="btn btn-accent btn-md" onclick="window.DnDNexus.openGroupCheckModal()" style="padding: 10px 20px; font-size: 0.95rem; font-weight: 800;">
+              🎲 GRUP ZARI AT (EVRENSEL ZAR MOTORU)
+            </button>
+            <button id="btn-secret-dm-roll" class="btn btn-secondary btn-sm" onclick="window.DnDNexus.rollSecretDMDice()">
+              🎲 Gizli DM Zarı At (d20)
+            </button>
+          </div>
+          <div id="group-check-results-box" class="gen-result-box" style="margin-top: 12px; display: none;"></div>
+        </section>
+      </div>
+
+      <!-- PANEL 2: ⚔️ SAVAŞ & CANAVARLAR -->
+      <div id="dm-tab-panel-combat" class="dm-tab-panel" style="display: none;">
+        <!-- ADVANCED DM FEATURE 1: COMBAT ENCOUNTER TRACKER -->
+        <section class="dm-section-card encounter-tracker-card">
+          <div class="dm-card-header-main">
+            <h3>⚔️ CANLI SAVAŞ & İNİSİYATİF TAKİBİ (COMBAT ENCOUNTER TRACKER)</h3>
+            <div class="encounter-actions">
+              <span class="round-badge">Raund: <strong id="encounter-round-num">1</strong></span>
+              <button id="btn-next-turn" class="btn btn-accent btn-sm">Sonraki Tur &raquo;</button>
+              <button id="btn-add-enemy" class="btn btn-secondary btn-sm">+ Düşman / Canavar Ekle</button>
+              <button id="btn-roll-sort-initiative" class="btn btn-secondary btn-sm">🎲 Otomatik Zarları At & Sırala</button>
+              <button id="btn-reset-encounter" class="btn btn-danger btn-sm">Savaşı Sıfırla</button>
+            </div>
+          </div>
+
+          <div class="active-turn-banner" id="active-turn-banner">
+            <span>Şu Anki Tur: <strong id="active-combatant-name">Henüz Savaş Başlamadı</strong></span>
+          </div>
+
+          <table class="encounter-table">
+            <thead>
+              <tr>
+                <th>TUR</th>
+                <th>İSİM (NAME)</th>
+                <th>TİP</th>
+                <th>İNİSİYATİF ZARI</th>
+                <th>AC</th>
+                <th>CAN (HP)</th>
+                <th>HIZLI HP DÜZENLE</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="encounter-tbody"></tbody>
+          </table>
+        </section>
+
+        <!-- DM FEATURE 2: 🐉 5E MONSTER BESTIARY & ENCOUNTER INJECTOR -->
+        <section class="dm-section-card">
+          <div class="dm-card-header-main">
+            <h3>🐉 CANAVAR & YARATIK KÜTÜPHANESİ (5E MONSTER BESTIARY)</h3>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <input type="text" id="monster-search-input" class="monster-search-edit" placeholder="🔍 Canavar Ara (Goblin, Dragon, Skeleton...)" oninput="window.DnDNexus.renderMonstersBestiary(this.value)" style="width: 280px; padding: 6px 12px; font-size: 0.88rem;">
+            </div>
+          </div>
+          <div id="monster-results-container" class="monster-results-grid"></div>
+        </section>
+      </div>
+
+      <!-- PANEL 3: 📖 KAMPANYA & GÜNLÜĞÜ -->
+      <div id="dm-tab-panel-journal" class="dm-tab-panel" style="display: none;">
+        <!-- DM FEATURE 5: 📖 KAMPANYA & OTURUM GÜNLÜĞÜ (JOURNAL & QUEST LOG) -->
+        <section class="dm-section-card">
+          <h3 class="dm-card-title">📖 KAMPANYA & OTURUM GÜNLÜĞÜ (CAMPAIGN JOURNAL & QUEST LOG)</h3>
+          <div class="journal-layout-grid">
+            <div class="journal-col">
+              <div style="font-weight: bold; color: #e9d5ff; margin-bottom: 6px; font-size: 0.88rem;">📝 OTURUM NOTLARI (SESSION NOTES):</div>
+              <textarea id="dm-session-notes" class="journal-text-area" placeholder="Session 1: Phandelver Madenleri girişi, kervan pususu..."></textarea>
+            </div>
+            <div class="journal-col">
+              <div style="font-weight: bold; color: #e9d5ff; margin-bottom: 6px; font-size: 0.88rem;">🎯 AKTİF GÖREVLER VE HEDEFLER (QUESTS):</div>
+              <textarea id="dm-quest-log" class="journal-text-area" placeholder="[Ana Görev] Gundren Rockseeker'ı Goblin Mağarasından kurtar..."></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section class="dm-section-card">
+          <h3 class="dm-card-title">🎲 RASTGELE DM ÜRETİCİLERİ (GENERATORS)</h3>
+          <div class="gen-buttons-row">
+            <button id="btn-gen-npc" class="btn btn-secondary btn-sm" onclick="window.DnDNexus.generateRandomNPC()">👤 Rastgele NPC Üret</button>
+            <button id="btn-gen-loot" class="btn btn-secondary btn-sm" onclick="window.DnDNexus.generateRandomLoot()">💰 Rastgele Hazine Üret</button>
+          </div>
+          <div id="gen-result-box" class="gen-result-box">
+            <div style="color:#c084fc; font-size:0.88rem;">Yukarıdaki butonlardan birine basarak anında NPC veya Hazine üretebilirsiniz.</div>
+          </div>
+        </section>
+      </div>
+
+      <!-- PANEL 4: 📜 KURAL REHBERİ -->
+      <div id="dm-tab-panel-rules" class="dm-tab-panel" style="display: none;">
+        <section class="dm-section-card">
+          <h3 class="dm-card-title">📖 DM HIZLI KURAL REHBERİ (CHEAT SHEET)</h3>
+          <div class="rules-tabs">
+            <button class="rule-tab-btn active" data-rule="conditions">Durumlar (Conditions)</button>
+            <button class="rule-tab-btn" data-rule="cover">Siper (Cover)</button>
+            <button class="rule-tab-btn" data-rule="vision">Işık & Görüş</button>
+          </div>
+          <div id="rule-content-box" class="rule-content-box"></div>
+        </section>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FLOATING LIVE ROLL FEED DRAWER -->
+  <div id="roll-feed-drawer" class="roll-feed-drawer no-print">
+    <div class="feed-header" id="feed-header-toggle">
+      <span>🎲 Canlı Zar Akışı (Party Feed)</span>
+      <button class="btn-toggle-feed" id="btn-toggle-feed-icon">▲</button>
+    </div>
+    <div class="feed-body" id="feed-body-list">
+      <div class="feed-item">Zar akışı aktif. Atılan tüm zarlar burada canlı görünecek.</div>
+    </div>
+  </div>
+
+  <!-- Interactive Dice Roller Modal -->
+  <div id="dice-modal" class="modal-overlay no-print" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>🎲 ZAR ATICI / DICE ROLLER</h2>
+        <button id="btn-close-dice" class="btn-close">&times;</button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="dice-type-selector">
+          <button class="dice-btn" data-sides="4">d4</button>
+          <button class="dice-btn" data-sides="6">d6</button>
+          <button class="dice-btn" data-sides="8">d8</button>
+          <button class="dice-btn" data-sides="10">d10</button>
+          <button class="dice-btn" data-sides="12">d12</button>
+          <button class="dice-btn active" data-sides="20">d20</button>
+          <button class="dice-btn" data-sides="100">d100</button>
+        </div>
+
+        <div class="dice-controls-grid">
+          <div class="dice-control-field">
+            <label for="dice-count">Zar Sayısı:</label>
+            <input type="number" id="dice-count" value="1" min="1" max="20">
+          </div>
+          <div class="dice-control-field">
+            <label for="dice-modifier">Bonus / Modifikatör:</label>
+            <input type="number" id="dice-modifier" value="0">
+          </div>
+        </div>
+
+        <div class="d20-options" id="d20-options-box">
+          <label>d20 Durumu:</label>
+          <div class="radio-group">
+            <label><input type="radio" name="d20-mode" value="normal" checked> Normal</label>
+            <label><input type="radio" name="d20-mode" value="advantage"> Avantajlı (Advantage)</label>
+            <label><input type="radio" name="d20-mode" value="disadvantage"> Dezavantajlı (Disadv)</label>
+          </div>
+        </div>
+
+        <button id="btn-roll-action" class="btn btn-accent btn-large-roll">
+          🎲 ZARI AT!
+        </button>
+
+        <div id="dice-result-container" class="dice-result-container">
+          <div class="result-placeholder">Bir zar seçip "ZARI AT!" butonuna basın</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: FEAT SELECTOR (D&D 5E 2024) -->
+  <div id="modal-feat-selector" class="modal-overlay no-print" style="display: none;">
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <h3>✨ 2024 FEAT KATALOĞU & YÖNETİCİSİ</h3>
+          <div id="feats-modal-capacity-badge" class="feats-capacity-badge"></div>
+          <div class="feats-csv-actions">
+            <a class="btn btn-accent btn-xs" href="tools/build-feats.html" target="_blank" rel="noopener" title="Feat/Silah/Canavar/Magic Item kataloglarını Excel'de düzenleyip ilgili js dosyasını yeniden üretir">
+              📊 Veri Kataloğu Düzenleyici
+            </a>
+            <button id="btn-toggle-custom-feat-form" class="btn btn-secondary btn-xs" title="El ile Yeni Feat Ekle">
+              ➕ Özel Feat Ekle
+            </button>
+          </div>
+        </div>
+        <button id="btn-close-feats-modal" class="btn-close">&times;</button>
+      </div>
+
+      <!-- Collapsible Form for Adding Custom Feats -->
+      <div id="custom-feat-form-panel" class="custom-feat-panel" style="display: none;">
+        <h4 class="custom-feat-form-title">⚡ Yeni Özel Feat / Yetenek Ekle</h4>
+        <div class="custom-feat-grid">
+          <div class="form-group">
+            <label for="custom-feat-name">Feat İsmi:</label>
+            <input type="text" id="custom-feat-name" placeholder="Örn: Sharp Mind">
+          </div>
+          <div class="form-group">
+            <label for="custom-feat-category">Kategori:</label>
+            <select id="custom-feat-category">
+              <option value="Origin Feat">Origin Feat</option>
+              <option value="General Feat" selected>General Feat</option>
+              <option value="Fighting Style Feat">Fighting Style Feat</option>
+              <option value="Epic Boon Feat">Epic Boon Feat</option>
+              <option value="Custom Feat">Özel (Custom Feat)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="custom-feat-prereq">Gereksinim (Prerequisite):</label>
+            <input type="text" id="custom-feat-prereq" placeholder="Örn: Level 4+, Intelligence 13+">
+          </div>
+          <div class="form-group">
+            <label for="custom-feat-asi">ASI Stat Bonusu (+1):</label>
+            <select id="custom-feat-asi" multiple style="height: 38px;">
+              <option value="str">STR (+1)</option>
+              <option value="dex">DEX (+1)</option>
+              <option value="con">CON (+1)</option>
+              <option value="int">INT (+1)</option>
+              <option value="wis">WIS (+1)</option>
+              <option value="cha">CHA (+1)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group" style="margin-top: 10px;">
+          <label for="custom-feat-details">Detaylı Açıklama / Paragraflar:</label>
+          <textarea id="custom-feat-details" placeholder="Feat'in kazandırdığı tüm yetenek ve kuralları buraya yazın..." rows="3"></textarea>
+        </div>
+        <div class="custom-feat-actions">
+          <button id="btn-save-custom-feat" class="btn btn-accent btn-sm">💾 Feat'i Kaydet</button>
+          <button id="btn-cancel-custom-feat" class="btn btn-secondary btn-sm">İptal</button>
+        </div>
+      </div>
+
+      <div class="feats-modal-controls">
+        <div class="feats-search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="feats-search-input" placeholder="Feat ara (örn: Alert, Lucky, Fey-Touched, Boon)...">
+        </div>
+        <div class="feat-category-tabs">
+          <button class="feat-category-tab active" data-category="all">Tümü</button>
+          <button class="feat-category-tab" data-category="Origin">Origin Feats</button>
+          <button class="feat-category-tab" data-category="General">General Feats</button>
+          <button class="feat-category-tab" data-category="Fighting">Fighting Style</button>
+          <button class="feat-category-tab" data-category="Epic">Epic Boons</button>
+        </div>
+      </div>
+      <div id="feats-catalog-grid" class="feats-catalog-grid"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: CORE CLASS SELECTOR (12 D&D 5E CLASSES) -->
+  <div id="modal-class-selector" class="modal-overlay no-print" style="display: none;">
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <div class="modal-header-left" style="display: flex; align-items: center; gap: 16px;">
+          <h3>⚔️ D&D 5E ANA SINIF KATALOĞU (CORE CLASSES)</h3>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <label for="class-select-level-input" style="font-weight: bold; color: #c084fc; font-size: 0.88rem;">Seviye (Level):</label>
+            <input type="number" id="class-select-level-input" value="3" min="1" max="20" style="width: 60px; padding: 4px; font-weight: bold; text-align: center;">
+          </div>
+        </div>
+        <button id="btn-close-class-modal" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 16px;">
+        <div id="classes-catalog-grid" class="feats-catalog-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: SUBCLASS SELECTOR (2024 PHB) -->
+  <div id="modal-subclass-selector" class="modal-overlay no-print" style="display: none;">
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <h3>🛡️ ALT SINIF (SUBCLASS) KATALOĞU & REHBERİ</h3>
+        </div>
+        <button id="btn-close-subclass-modal" class="btn-close" onclick="window.DnDNexus.closeSubclassModal()">&times;</button>
+      </div>
+      <div class="feats-modal-controls" style="padding: 10px 16px 0 16px;">
+        <div id="subclass-class-tabs" class="feat-category-tabs" style="flex-wrap: wrap; gap: 6px;"></div>
+      </div>
+      <div class="modal-body" style="padding: 16px;">
+        <div id="subclasses-catalog-grid" class="feats-catalog-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: WEAPON SELECTOR (PHB 2024) -->
+  <div id="modal-weapon-selector" class="modal-overlay no-print" style="display: none;">
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <h3>⚔️ PHB 2024 SİLAH KATALOĞU</h3>
+        </div>
+        <button id="btn-close-weapons-modal" class="btn-close">&times;</button>
+      </div>
+
+      <div class="feats-modal-controls">
+        <div class="feats-search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="weapons-search-input" placeholder="Silah ara (örn: Longsword, Dagger, Crossbow)...">
+        </div>
+        <div class="feat-category-tabs">
+          <button class="weapon-category-tab active" data-category="all">Tümü</button>
+          <button class="weapon-category-tab" data-category="Simple Melee">Simple Melee</button>
+          <button class="weapon-category-tab" data-category="Simple Ranged">Simple Ranged</button>
+          <button class="weapon-category-tab" data-category="Martial Melee">Martial Melee</button>
+          <button class="weapon-category-tab" data-category="Martial Ranged">Martial Ranged</button>
+        </div>
+      </div>
+      <div id="weapons-catalog-grid" class="feats-catalog-grid"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: MAGIC ITEM SELECTOR -->
+  <div id="modal-magic-item-selector" class="modal-overlay no-print" style="display: none;">
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <h3>💍 MAGIC ITEM KATALOĞU</h3>
+        </div>
+        <button id="btn-close-magic-items-modal" class="btn-close">&times;</button>
+      </div>
+
+      <div class="feats-modal-controls">
+        <div class="feats-search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="magic-items-search-input" placeholder="Eşya ara (örn: Potion, Ring, Wand, Sword)...">
+        </div>
+        <div class="feat-category-tabs">
+          <button class="magic-item-rarity-tab active" data-rarity="all">Tümü</button>
+          <button class="magic-item-rarity-tab" data-rarity="Common">Common</button>
+          <button class="magic-item-rarity-tab" data-rarity="Uncommon">Uncommon</button>
+          <button class="magic-item-rarity-tab" data-rarity="Rare">Rare</button>
+          <button class="magic-item-rarity-tab" data-rarity="Very Rare">Very Rare</button>
+          <button class="magic-item-rarity-tab" data-rarity="Legendary">Legendary</button>
+        </div>
+      </div>
+      <div id="magic-items-catalog-grid" class="feats-catalog-grid"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: CUSTOM RESOURCE TRACKER -->
+  <div id="modal-custom-resource" class="modal-overlay no-print" style="display: none;">
+    <div class="modal-card modal-sm">
+      <div class="modal-header">
+        <h3>⚡ YENİ ÖZEL KAYNAK TAKİPÇİSİ</h3>
+        <button id="btn-close-resource-modal" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label for="custom-res-name">Kaynak Adı:</label>
+          <input type="text" id="custom-res-name" placeholder="Örn: Ki Points, Maneuver Dice, Lay on Hands...">
+        </div>
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label for="custom-res-max">Maksimum Kapasite:</label>
+          <input type="number" id="custom-res-max" value="3" min="1" max="99">
+        </div>
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label for="custom-res-reset">Yenilenme Kuralı:</label>
+          <select id="custom-res-reset">
+            <option value="short">☕ Kısa Dinlenmede Yenilenir (Short Rest)</option>
+            <option value="long" selected>🌙 Uzun Dinlenmede Yenilenir (Long Rest)</option>
+            <option value="manual">⚙️ Manuel (Otomatik Yenilenmez)</option>
+          </select>
+        </div>
+        <button id="btn-save-custom-resource" class="btn btn-accent" style="width: 100%;">💾 Kaynağı Oluştur</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DM FULL CHARACTER INSPECTOR MODAL -->
+  <div id="modal-inspect-char" class="modal-overlay">
+    <div class="modal-content modal-lg" style="max-width: 960px; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-header">
+        <div>
+          <h2 id="inspect-char-name">Thorin Ironshield</h2>
+          <div id="inspect-char-meta" style="font-size: 0.88rem; color: #c084fc;">Human Fighter Level 3</div>
+        </div>
+        <button id="btn-close-inspect-modal" class="btn-close">&times;</button>
+      </div>
+
+      <div class="inspect-modal-body">
+        <!-- Vitals & Stats Summary Grid -->
+        <div class="inspect-vitals-grid">
+          <div class="inspect-vital-card"><span class="vital-tag">ZIRH SINIFI</span><strong id="inspect-ac">18</strong></div>
+          <div class="inspect-vital-card"><span class="vital-tag">CAN (HP)</span><strong id="inspect-hp">28 / 28</strong></div>
+          <div class="inspect-vital-card"><span class="vital-tag">HIZ</span><strong id="inspect-speed">9m</strong></div>
+          <div class="inspect-vital-card"><span class="vital-tag">PASİF ALGI</span><strong id="inspect-passive-perc">12</strong></div>
+          <div class="inspect-vital-card"><span class="vital-tag">YETERLİLİK BONUSU</span><strong id="inspect-pb">+2</strong></div>
+        </div>
+
+        <!-- Ability Scores Grid -->
+        <div class="inspect-stats-grid">
+          <div class="inspect-stat-box"><span>GÜÇ</span><strong id="inspect-str">16 (+3)</strong></div>
+          <div class="inspect-stat-box"><span>ÇEVİKLİK</span><strong id="inspect-dex">12 (+1)</strong></div>
+          <div class="inspect-stat-box"><span>DAYANIKLILIK</span><strong id="inspect-con">15 (+2)</strong></div>
+          <div class="inspect-stat-box"><span>ZEKA</span><strong id="inspect-int">10 (+0)</strong></div>
+          <div class="inspect-stat-box"><span>BİLGELİK</span><strong id="inspect-wis">12 (+1)</strong></div>
+          <div class="inspect-stat-box"><span>KARİZMA</span><strong id="inspect-cha">8 (-1)</strong></div>
+        </div>
+
+        <!-- Weapons & Attacks -->
+        <div class="inspect-section-card">
+          <h3 class="inspect-section-title">⚔️ SILAHLAR VE SALDIRILAR (WEAPONS & ATTACKS)</h3>
+          <div id="inspect-weapons-container"></div>
+        </div>
+
+        <!-- Active Feats & Traits -->
+        <div class="inspect-section-card">
+          <h3 class="inspect-section-title">✨ FEAT'LER VE ÖZEL YETENEKLER (FEATS & TRAITS)</h3>
+          <div id="inspect-feats-container"></div>
+        </div>
+
+        <!-- Class Features & Trackers -->
+        <div class="inspect-section-card">
+          <h3 class="inspect-section-title">⚡ SINIF KAYNAKLARI VE TAKİPÇİLER (RESOURCE TRACKERS)</h3>
+          <div id="inspect-trackers-container"></div>
+        </div>
+
+        <!-- Equipment & Coins -->
+        <div class="inspect-section-card">
+          <h3 class="inspect-section-title">🎒 EKİPMANLAR VE SİKKELER (EQUIPMENT)</h3>
+          <div id="inspect-equipment-container"></div>
+        </div>
+
+        <!-- Spellbook & Prepared Spells -->
+        <div class="inspect-section-card">
+          <h3 class="inspect-section-title">🔮 BÜYÜ KİTABI VE HAZIR BÜYÜLER (SPELLBOOK)</h3>
+          <div id="inspect-spells-container"></div>
+        </div>
+
+        <!-- DM Private Notes -->
+        <div class="inspect-section-card">
+          <h3 class="inspect-section-title">📝 DM GİZLİ NOTLARI (OYUNCU GÖREMEZ)</h3>
+          <textarea id="inspect-dm-notes" class="party-notes-area" style="min-height: 80px;" placeholder="Bu oyuncu hakkında gizli DM notlarınız..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING SIDE SOUNDBOARD DRAWER TOGGLE BUTTON -->
+  <button id="btn-toggle-soundboard-drawer" class="btn-side-soundboard-toggle no-print" onclick="window.DnDNexus.toggleSoundboardDrawer()" title="Ses Paneli (Soundboard) Aç/Kapat">
+    🎵 Ses Paneli
+  </button>
+
+  <!-- SLIDE-OUT SIDE SOUNDBOARD DRAWER -->
+  <div id="soundboard-side-drawer" class="soundboard-side-drawer no-print">
+    <div class="soundboard-drawer-header">
+      <span>🎵 ÖZEL DM SES PANELİ (SOUNDBOARD)</span>
+      <button class="btn-close-drawer" onclick="window.DnDNexus.toggleSoundboardDrawer()">&times;</button>
+    </div>
+
+    <div class="soundboard-drawer-body">
+      <!-- ADD CUSTOM SOUND FORM -->
+      <div class="sound-upload-card">
+        <h4 style="font-family: var(--font-header); color: #e9d5ff; font-size: 0.9rem; margin-bottom: 8px;">➕ YENİ ÖZEL SES EKLE:</h4>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <input type="text" id="sound-name-input" placeholder="Ses Adı (ör: Taverna Müziği, Ejderha Sesi)" style="padding: 6px 10px; font-size: 0.85rem;">
+          <div style="display: flex; gap: 8px;">
+            <select id="sound-type-select" style="flex: 1; padding: 6px; font-size: 0.82rem;">
+              <option value="ambient">🎧 Ambient (Döngüsel Ortam)</option>
+              <option value="sfx">💥 SFX (Tek Seferlik Efekt)</option>
+            </select>
+            <select id="sound-mode-select" style="flex: 1; padding: 6px; font-size: 0.82rem;" onchange="window.DnDNexus.toggleSoundSourceMode(this.value)">
+              <option value="file">📁 Dosya Seç (MP3/WAV/OGG)</option>
+              <option value="url">🌐 Ses Linki (URL)</option>
+            </select>
+          </div>
+          <input type="file" id="sound-file-input" accept="audio/*" style="font-size: 0.8rem; padding: 4px;">
+          <input type="url" id="sound-url-input" placeholder="https://.../audio.mp3" style="display: none; padding: 6px 10px; font-size: 0.85rem;">
+          <button class="btn btn-accent btn-sm" onclick="window.DnDNexus.addCustomSound()" style="margin-top: 4px; width: 100%;">💾 Sesi Ekle ve Kaydet</button>
+        </div>
+      </div>
+
+      <!-- AMBIENT SOUNDS LIST -->
+      <div class="sound-category-section">
+        <div class="sound-category-header">
+          <span>🎧 AMBİENT MÜZİK & ORTAM SESLERİ</span>
+          <button class="btn btn-danger btn-xs" onclick="window.DnDNexus.stopAmbientSound()">⏹️ Sesi Durdur</button>
+        </div>
+        <div id="custom-ambient-list" class="custom-sound-list"></div>
+      </div>
+
+      <!-- SFX SOUNDS LIST -->
+      <div class="sound-category-section">
+        <div class="sound-category-header">
+          <span>💥 SES EFEKTLERİ (SFX)</span>
+        </div>
+        <div id="custom-sfx-list" class="custom-sound-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UNIVERSAL GROUP CHECK MODAL -->
+  <div id="modal-group-check" class="modal-overlay">
+    <div class="modal-content group-check-modal-content" style="max-width: 680px; width: 95%;">
+      <div class="modal-header">
+        <h3>🎲 EVRENSEL GRUP ZAR MOTORU (UNIVERSAL GROUP CHECK)</h3>
+        <button class="btn-close-modal" onclick="window.DnDNexus.closeGroupCheckModal()">&times;</button>
+      </div>
+      <div class="modal-body" style="display: flex; flex-direction: column; gap: 14px;">
+        <!-- TYPE SELECTOR TABS -->
+        <div class="gc-tabs-row">
+          <button id="gc-tab-save" class="gc-tab-btn active" onclick="window.DnDNexus.switchGCTab('save')">🛡️ Kurtarma Atışları (Saves)</button>
+          <button id="gc-tab-skill" class="gc-tab-btn" onclick="window.DnDNexus.switchGCTab('skill')">🧠 Yetenekler (Skills)</button>
+          <button id="gc-tab-ability" class="gc-tab-btn" onclick="window.DnDNexus.switchGCTab('ability')">💪 Ham Statlar (Abilities)</button>
+        </div>
+
+        <!-- TAB CONTENT 1: SAVES -->
+        <div id="gc-panel-save" class="gc-panel-content">
+          <label class="gc-section-title">Kurtarma Atışı (Saving Throw) Seçin:</label>
+          <div class="gc-options-grid">
+            <button class="gc-opt-btn active" onclick="window.DnDNexus.selectGCOption(this, 'save', 'str-save', 'Güç Kurtarma (STR Save)')">STR Save</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'save', 'dex-save', 'Çeviklik Kurtarma (DEX Save)')">DEX Save</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'save', 'con-save', 'Bünye Kurtarma (CON Save)')">CON Save</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'save', 'int-save', 'Zeka Kurtarma (INT Save)')">INT Save</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'save', 'wis-save', 'Wisdom Kurtarma (WIS Save)')">WIS Save</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'save', 'cha-save', 'Karizma Kurtarma (CHA Save)')">CHA Save</button>
+          </div>
+        </div>
+
+        <!-- TAB CONTENT 2: SKILLS -->
+        <div id="gc-panel-skill" class="gc-panel-content" style="display: none;">
+          <label class="gc-section-title">Yetenek (Skill) Seçin:</label>
+          <div class="gc-options-grid" style="grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));">
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'skill', 'acrobatics', 'Akrobasi (Acrobatics)')">Akrobasi</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'skill', 'animal_handling', 'Hayvan Eğitimi')">Hayvan Eğitimi</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'skill', 'arcana', 'Büyücülük (Arcana)')">Büyücülük</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'skill', 'athletics', 'Atletizm (Athletics)')">Atletizm</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'skill', 'deception', 'Kandırma (Deception)')">Kandırma</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'skill', 'history', 'Tarih (History)')">Tarih</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'skill', 'insight', 'Sezgi (Insight)')">Sezgi</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'skill', 'intimidation', 'Gözdağı')">Gözdağı</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'skill', 'investigation', 'Soruşturma')">Soruşturma</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'skill', 'medicine', 'Tıp (Medicine)')">Tıp</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'skill', 'nature', 'Doğa (Nature)')">Doğa</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'skill', 'perception', 'Algı (Perception)')">Algı</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'skill', 'performance', 'Performans')">Performans</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'skill', 'persuasion', 'İkna (Persuasion)')">İkna</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'skill', 'religion', 'Din (Religion)')">Din</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'skill', 'sleight_of_hand', 'El Çabukluğu')">El Çabukluğu</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'skill', 'stealth', 'Gizlilik (Stealth)')">Gizlilik</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'skill', 'survival', 'Hayatta Kalma')">Hayatta Kalma</button>
+          </div>
+        </div>
+
+        <!-- TAB CONTENT 3: ABILITIES -->
+        <div id="gc-panel-ability" class="gc-panel-content" style="display: none;">
+          <label class="gc-section-title">Ham Stat Kontrolü (Ability Check) Seçin:</label>
+          <div class="gc-options-grid">
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'ability', 'str', 'Ham Güç (STR Check)')">STR Check</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'ability', 'dex', 'Ham Çeviklik (DEX Check)')">DEX Check</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'ability', 'con', 'Ham Bünye (CON Check)')">CON Check</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'ability', 'int', 'Ham Zeka (INT Check)')">INT Check</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'ability', 'wis', 'Ham Wisdom (WIS Check)')">WIS Check</button>
+            <button class="gc-opt-btn" onclick="window.DnDNexus.selectGCOption(this, 'ability', 'cha', 'Ham Karizma (CHA Check)')">CHA Check</button>
+          </div>
+        </div>
+
+        <!-- DC INPUT & EXECUTE BAR -->
+        <div class="gc-config-bar">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <label style="font-weight: bold; color: #e9d5ff; font-size: 0.88rem;">🎯 Hedef DC (Zorluk):</label>
+            <input type="number" id="gc-dc-input" value="15" min="1" max="30" style="width: 70px; padding: 4px 8px; font-weight: bold; text-align: center;">
+          </div>
+          <div id="selected-gc-label" style="font-weight: bold; color: #c084fc; font-size: 0.9rem;">Seçilen: Güç Kurtarma (STR Save)</div>
+          <button class="btn btn-accent btn-md" onclick="window.DnDNexus.executeUniversalGroupCheck()" style="padding: 8px 22px; font-size: 0.95rem; font-weight: 800;">
+            🎲 ZARLARI AT!
+          </button>
+        </div>
+
+        <!-- RESULTS DISPLAY BOX -->
+        <div id="gc-modal-results" style="display: none;" class="gen-result-box"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modular Scripts Loaded Sequentially for Local Disk File:// Protocol Compatibility -->
+  <script src="js/state.js?v=45.0"></script>
+  <script src="js/storage.js?v=45.0"></script>
+  <script src="js/sync.js?v=45.0"></script>
+  <script src="js/dice.js?v=45.0"></script>
+  <script src="js/spells.js?v=45.0"></script>
+  <script src="js/encounter.js?v=45.0"></script>
+  <script src="js/monsters_data.js?v=45.0"></script>
+  <script src="js/dm-tools.js?v=45.0"></script>
+  <script src="js/csv_parser.js?v=45.0"></script>
+  <script src="js/feats_data.js?v=45.0"></script>
+  <script src="js/feats_ui.js?v=45.0"></script>
+  <script src="js/weapons_data.js?v=45.0"></script>
+  <script src="js/weapons_ui.js?v=45.0"></script>
+  <script src="js/magic_treasures_data.js?v=45.0"></script>
+  <script src="js/magic_treasures_ui.js?v=45.0"></script>
+  <script src="js/classes_data.js?v=45.0"></script>
+  <script src="js/classes_ui.js?v=45.0"></script>
+  <script src="js/subclasses_data.js?v=45.0"></script>
+  <script src="js/subclasses_ui.js?v=45.0"></script>
+  <script src="js/resources.js?v=45.0"></script>
+  <script src="js/i18n.js?v=45.0"></script>
+  <script src="js/ui.js?v=45.0"></script>
+  <script src="js/main.js?v=45.0"></script>
+</body>
+</html>

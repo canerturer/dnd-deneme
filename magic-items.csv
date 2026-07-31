@@ -1,0 +1,39 @@
+name,rarity,category,attunement,description
+Potion of Healing,Common,Potion,FALSE,İçildiğinde 2d4+2 can yenilersin.
+Potion of Climbing,Common,Potion,FALSE,1 saat boyunca tırmanma hızın yürüme hızına eşitlenir ve tırmanırken düşme riskin azalır.
+Spell Scroll (Cantrip / 1. Seviye),Common,Scroll,FALSE,"Parşömeldeki büyüyü hazırlamadan, bir kereliğine atabilirsin. Kullanınca tükenir."
+Rope of Mending,Common,Wondrous Item,FALSE,"Kopan bu ip, iki ucunu birbirine yaklaştırdığında kendini onarır."
+Bead of Nourishment,Common,Wondrous Item,FALSE,Yutulduğunda bir günlük yiyecek ihtiyacını karşılar.
+Candle of the Deep,Common,Wondrous Item,FALSE,"Su altında dahi sönmeyen, normal mumdan 6 kat uzun yanan büyülü mum."
+Unbreakable Arrow,Common,Ammunition,FALSE,Vurduktan sonra asla kırılmayan büyülü ok; her atıştan sonra geri toplanabilir.
+Wand of Secrets,Common,Wand,FALSE,Aktive edildiğinde 30 fit içindeki gizli kapı veya geçitlerin yönünü hissettirir.
+Bag of Holding,Uncommon,Wondrous Item,FALSE,"İçi dışından çok daha büyük olan bu torba 500 lb'ye kadar eşyayı, ağırlığını hissettirmeden taşır."
+Cloak of Protection,Uncommon,Wondrous Item,TRUE,Takarken Zırh Sınıfına (AC) ve tüm kurtarma atışlarına +1 bonus verir.
+Ring of Protection,Uncommon,Ring,TRUE,Takarken Zırh Sınıfına (AC) ve tüm kurtarma atışlarına +1 bonus verir.
+Boots of Elvenkind,Uncommon,Wondrous Item,FALSE,Bu botlarla sessizce yürürsün; hareket ederken Stealth (Gizlenme) kontrollerinde avantaj kazanırsın.
+Cloak of Elvenkind,Uncommon,Wondrous Item,TRUE,Kukuletası takılıyken Stealth kontrollerinde avantaj sağlar ve seni görmeye çalışan Algı kontrollerini zorlaştırır.
+Wand of Magic Missiles,Uncommon,Wand,TRUE,1d4+1 yükle gelir; her yük harcanarak Magic Missile büyüsü atılabilir. Long Rest'te 1d6+1 yük yeniler.
++1 Silah,Uncommon,Weapon,FALSE,Bu büyülü silahla yapılan vuruş ve hasar atışlarına +1 bonus eklenir.
++1 Zırh,Uncommon,Armor,FALSE,Bu zırhı giyerken Zırh Sınıfına (AC) +1 bonus eklenir.
+Sentinel Shield,Uncommon,Armor,FALSE,Bu kalkanı taşırken Algı (Perception) yeteneğinde uzmanlık kazanır ve asla sürpriz saldırıya uğramazsın.
+Winged Boots,Uncommon,Wondrous Item,TRUE,"Günde toplam 4 saate kadar, yürüme hızınla eşit bir Uçuş hızı kazandırır."
++2 Silah,Rare,Weapon,FALSE,Bu büyülü silahla yapılan vuruş ve hasar atışlarına +2 bonus eklenir.
++2 Zırh,Rare,Armor,FALSE,Bu zırhı giyerken Zırh Sınıfına (AC) +2 bonus eklenir.
+Flame Tongue,Rare,Weapon,TRUE,"Bonus aksiyonla alevlendirilebilen bu kılıç, aktifken vuruşlarına ekstra 2d6 ateş hasarı ve parlak ışık ekler."
+Wand of Fireballs,Rare,Wand,TRUE,"7 yükle gelir; bir yük harcanarak 3. seviye Fireball büyüsü atılabilir, fazla yükle hasar artar."
+Boots of Speed,Rare,Wondrous Item,TRUE,Bonus aksiyonla aktive edildiğinde 10 dakika boyunca hızını iki katına çıkarır ve fırsat saldırılarına karşı avantaj sağlar.
+Amulet of Health,Rare,Wondrous Item,TRUE,Takıldığı sürece Dayanıklılık (CON) skorunu 19'a sabitler.
+Headband of Intellect,Rare,Wondrous Item,TRUE,Takıldığı sürece Zeka (INT) skorunu 19'a sabitler.
+Bracers of Defense,Rare,Wondrous Item,TRUE,Zırh ve kalkan giymiyorken Zırh Sınıfına (AC) +2 bonus verir.
+Rod of Absorption,Rare,Rod,TRUE,Sana yönelik büyü hasarını emip depolayabilir; depolanan enerjiyi kendi büyü slotlarını doldurmak için kullanabilirsin.
+Ring of Spell Storing,Rare,Ring,TRUE,İçine toplam 5 seviyeye kadar büyü depolanabilir; taşıyan kişi depolanan büyüleri kendi büyüsüymüş gibi atabilir.
++3 Silah,Very Rare,Weapon,FALSE,Bu büyülü silahla yapılan vuruş ve hasar atışlarına +3 bonus eklenir.
++3 Zırh,Very Rare,Armor,FALSE,Bu zırhı giyerken Zırh Sınıfına (AC) +3 bonus eklenir.
+Staff of Fire,Very Rare,Staff,TRUE,"10 yükle gelir; Fireball, Wall of Fire gibi ateş büyülerini atabilirsin. Taşıyan kişi ateşe bağışıklık kazanır."
+Cloak of Displacement,Very Rare,Wondrous Item,TRUE,Gerçek konumundan biraz kaymış görünürsün; sana yönelik saldırılar dezavantajlı olur (isabet alana kadar).
+Ring of Regeneration,Very Rare,Ring,TRUE,Takan kişi her dakika başı 1d6 can yeniler; kesilen uzuvlar bile zamanla yeniden büyüyebilir.
+Manual of Bodily Health,Very Rare,Wondrous Item,FALSE,Bu kitabı okuyup içindeki talimatları 48 saat boyunca uygulayan kişinin Dayanıklılık (CON) skoru kalıcı olarak +2 artar. Kitap sonra gücünü kaybeder.
+Vorpal Sword,Legendary,Weapon,TRUE,"Doğal 20 atışıyla vurduğunda, hedef baş kesilmesine dayanıklı değilse anında öldürülür."
+Staff of the Magi,Legendary,Staff,TRUE,"En güçlü büyü asalarından biri; büyü emme, ek büyü slotu ve Fireball/Lightning Bolt gibi güçlü büyüleri atabilme yeteneği verir."
+Armor of Invulnerability,Legendary,Armor,TRUE,"Fiziksel (kesici/delici/ezici) hasara direnç sağlar; günde bir kez, 10 dakikalığına tüm fiziksel hasara tam bağışıklık kazandırır."
+Deck of Many Things,Legendary,Wondrous Item,FALSE,"13 kartlık büyülü bir deste. Bir kart çekmek, iyi ya da kötü, karakterin kaderini kalıcı olarak değiştirebilecek rastgele ve güçlü bir etki tetikler. Çok risklidir."
