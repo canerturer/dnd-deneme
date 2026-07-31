@@ -17,6 +17,27 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Trigger: Auto-create Profile in public.profiles when User Signs Up via Supabase Auth
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.profiles (id, user_id_tag, username, avatar)
+  VALUES (
+    NEW.id,
+    SPLIT_PART(NEW.email, '@', 1),
+    COALESCE(NEW.raw_user_meta_data->>'username', SPLIT_PART(NEW.email, '@', 1)),
+    COALESCE(NEW.raw_user_meta_data->>'avatar', '🧙‍♂️')
+  )
+  ON CONFLICT (user_id_tag) DO NOTHING;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
 -- 3. Create Campaigns Table (Lobby Matchmaking & DM Rooms)
 CREATE TABLE IF NOT EXISTS public.campaigns (
   code TEXT PRIMARY KEY,             -- e.g., 'CAMP-8F92A'

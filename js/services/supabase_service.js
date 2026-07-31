@@ -69,6 +69,50 @@ window.DnDNexus = window.DnDNexus || {};
       }
     }
 
+    async signUpUser(emailOrId, password, username, avatar) {
+      if (!this.client) return { success: false, message: 'Supabase bulut aktif değil.' };
+
+      const email = emailOrId.includes('@') ? emailOrId : `${emailOrId.toLowerCase().trim()}@dndnexus.local`;
+
+      try {
+        const { data, error } = await this.client.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            data: {
+              username: username,
+              avatar: avatar
+            }
+          }
+        });
+
+        if (error) return { success: false, message: error.message };
+
+        return { success: true, user: data.user, message: 'Supabase Cloud hesabı başarıyla oluşturuldu!' };
+      } catch(err) {
+        return { success: false, message: err.message };
+      }
+    }
+
+    async signInUser(emailOrId, password) {
+      if (!this.client) return { success: false, message: 'Supabase bulut aktif değil.' };
+
+      const email = emailOrId.includes('@') ? emailOrId : `${emailOrId.toLowerCase().trim()}@dndnexus.local`;
+
+      try {
+        const { data, error } = await this.client.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
+
+        if (error) return { success: false, message: error.message };
+
+        return { success: true, user: data.user, session: data.session, message: 'Supabase Cloud hesabına giriş yapıldı!' };
+      } catch(err) {
+        return { success: false, message: err.message };
+      }
+    }
+
     subscribeEventBus() {
       const bus = window.DnDNexus.EventBus;
       const EVENTS = window.DnDNexus.EVENTS;

@@ -69,6 +69,23 @@ window.DnDNexus = window.DnDNexus || {};
         return { success: false, message: 'Şifreler birbiriyle eşleşmiyor!' };
       }
 
+      // 1. Supabase Cloud Native Authentication
+      if (window.DnDNexus.SupabaseService && window.DnDNexus.SupabaseService.isConnected) {
+        const sbRes = await window.DnDNexus.SupabaseService.signUpUser(cleanId, password, cleanName, avatar);
+        if (sbRes.success) {
+          const account = {
+            id: cleanId,
+            username: cleanName,
+            avatar: avatar
+          };
+          this.setCurrentSession(account);
+          return { success: true, message: '⚡ Supabase Cloud hesabı başarıyla oluşturuldu ve giriş yapıldı!' };
+        } else {
+          return sbRes;
+        }
+      }
+
+      // 2. Local Account Vault Fallback
       const vault = this.getAccountsVault();
       if (vault[cleanId]) {
         return { success: false, message: 'Bu Kullanıcı ID zaten kayıtlı! Lütfen Giriş Yapın veya başka ID seçin.' };
@@ -87,7 +104,7 @@ window.DnDNexus = window.DnDNexus || {};
       this.saveAccountsVault(vault);
 
       this.setCurrentSession(account);
-      return { success: true, message: 'Hesap başarıyla oluşturuldu ve giriş yapıldı!' };
+      return { success: true, message: 'Hesap yerel olarak oluşturuldu ve giriş yapıldı!' };
     }
 
     async loginAccount(userId, password) {
@@ -95,6 +112,24 @@ window.DnDNexus = window.DnDNexus || {};
       if (!cleanId) return { success: false, message: 'Lütfen Kullanıcı ID giriniz!' };
       if (!password) return { success: false, message: 'Lütfen Şifre giriniz!' };
 
+      // 1. Supabase Cloud Native Authentication
+      if (window.DnDNexus.SupabaseService && window.DnDNexus.SupabaseService.isConnected) {
+        const sbRes = await window.DnDNexus.SupabaseService.signInUser(cleanId, password);
+        if (sbRes.success) {
+          const userMeta = sbRes.user?.user_metadata || {};
+          const account = {
+            id: cleanId,
+            username: userMeta.username || cleanId,
+            avatar: userMeta.avatar || '🧙‍♂️'
+          };
+          this.setCurrentSession(account);
+          return { success: true, message: '⚡ Supabase Cloud hesabına başarıyla giriş yapıldı!' };
+        } else {
+          return sbRes;
+        }
+      }
+
+      // 2. Local Account Vault Fallback
       const vault = this.getAccountsVault();
       const account = vault[cleanId];
 
